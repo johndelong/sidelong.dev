@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro'
+import Arrow from '../components/Arrow.astro'
+import Shot from '../components/Shot.astro'
+import Stage from '../components/Stage.astro'
+import { site } from '../site'
+
+// Replace with a path in /public, e.g. '/portrait.jpg'
+const portrait = undefined
+
+const principles = [
+  { title: '[Principle one]', body: '[A sentence on what it means in practice.]', color: '#C24A22' },
+  { title: '[Principle two]', body: '[A sentence on what it means in practice.]', color: '#C4365F' },
+  { title: '[Principle three]', body: '[A sentence on what it means in practice.]', color: '#6B3FD0' },
+]
+---
+
+<Base title="About">
+  <section class="wrap" style="padding-top: 88px; padding-bottom: 136px">
+    <div class="cols center">
+      <div class="s7 stack" style="--gap: 24px">
+        <p class="eyebrow in" style="--i: 1">About</p>
+        <h1 class="h1 in" style="--i: 2">Hi, I'm <em>{site.author}.</em></h1>
+        <p class="lede in" style="--i: 3; font-size: 21px; color: var(--ink-2)">
+          [One or two sentences: who you are and what you do, in the voice you'd use with a friend.]
+        </p>
+        <p class="lede in" style="--i: 4; font-size: 19px">
+          [Why you build on the side: what you get out of it, and who the apps are for.]
+        </p>
+      </div>
+      <div class="s5">
+        <Stage><Shot src={portrait} alt={`Portrait of ${site.author}`} label="Portrait" /></Stage>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="cols">
+      <h2 class="h2 s4 rvl">Why “sidelong”</h2>
+      <div class="prose s7 end rv">
+        <p>
+          Sidelong means from the side. Everything here is a side project, and I like coming at a problem from a
+          slightly different angle than the obvious one.
+        </p>
+        <p style="color: var(--muted)">[Anything personal about the name you'd like to add.]</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <h2 class="h2 rvl" style="margin-bottom: 32px">How I build</h2>
+    <div class="cols">
+      {
+        principles.map((principle, i) => (
+          <div class:list={['card panel s4', i ? 'rv' : 'rvl']} style="padding: 28px">
+            <h3 class="h3" style={`font-style: italic; font-size: 24px; color: ${principle.color}`}>{principle.title}</h3>
+            <p class="body" style="font-size: 17px">{principle.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom: 96px">
+    <div class="cols">
+      <div class="s7 stack rvl" style="--gap: 16px">
+        <h2 class="h2">Say hello</h2>
+        <p class="body" style="font-size: 19px">[A line inviting people to get in touch.]</p>
+        <div class="actions" style="gap: 8px 32px">
+          {site.contact.map((item) => <a class="link" href={item.href}>{item.label}</a>)}
+        </div>
+        <a class="link" href="/#apps">See the apps <Arrow /></a>
+      </div>
+    </div>
+  </section>
+</Base>

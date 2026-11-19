@@ -1,0 +1,16 @@
+---
+// The leaning gradient plane with an upright frame in front of it.
+const { tall = false, href } = Astro.props
+const Frame = href ? 'a' : 'div'
+---
+
+<div class:list={['stage', { tall }]}>
+  <div class="stage-plane par-slow" aria-hidden="true">
+    <div class="lean"><div class="plane"></div></div>
+  </div>
+  <div class="stage-front par-fast">
+    <div class="shotin">
+      <Frame class="shot frame" href={href}><slot /></Frame>
+    </div>
+  </div>
+</div>

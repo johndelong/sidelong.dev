@@ -1,0 +1,14 @@
+---
+const { app, size = 56 } = Astro.props
+const { icon, glyph, gradient } = app.data
+---
+
+{
+  icon ? (
+    <img class="icon" src={icon} alt="" width={size} height={size} style={`--size:${size}px`} />
+  ) : (
+    <span class="icon" style={`--size:${size}px; background:linear-gradient(135deg, ${gradient})`}>
+      <svg viewBox="0 0 48 48" aria-hidden="true" set:html={glyph} />
+    </span>
+  )
+}

@@ -1,0 +1,65 @@
+---
+import { ClientRouter } from 'astro:transitions'
+import '../styles/global.css'
+import { site } from '../site'
+
+const { title, description = site.intro } = Astro.props
+const path = Astro.url.pathname
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} · ${site.name}` : site.name}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="dotlight" aria-hidden="true"></div>
+    <div class="page">
+      <header class="wrap header in">
+        <a class="brand" href="/">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M10 6h18l-4 20H6z" fill="#F0566E" stroke="#F0566E" stroke-width="3" stroke-linejoin="round"></path>
+          </svg>
+          {site.name}
+        </a>
+        <nav class="nav">
+          <a class="link" href="/#apps" aria-current={path.startsWith('/apps') ? 'page' : undefined}>Apps</a>
+          <a class="link" href="/about" aria-current={path.startsWith('/about') ? 'page' : undefined}>About</a>
+        </nav>
+      </header>
+      <main><slot /></main>
+      <footer class="wrap">
+        <div class="footer">
+          <span>© {new Date().getFullYear()} {site.author}</span>
+          <span>sidelong.dev</span>
+        </div>
+      </footer>
+    </div>
+    <script>
+      // Feed the pointer to CSS: --mx leans the plane, --px/--py light the dots.
+      const root = document.documentElement
+      let queued = false
+      addEventListener('pointermove', (e) => {
+        if (queued) return
+        queued = true
+        requestAnimationFrame(() => {
+          queued = false
+          root.style.setProperty('--mx', (e.clientX / innerWidth).toFixed(3))
+          root.style.setProperty('--px', `${e.pageX}px`)
+          root.style.setProperty('--py', `${e.pageY}px`)
+        })
+      })
+    </script>
+  </body>
+</html>

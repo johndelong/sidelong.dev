@@ -1,0 +1,104 @@
+---
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import AppIcon from '../../components/AppIcon.astro'
+import Arrow from '../../components/Arrow.astro'
+import Shot from '../../components/Shot.astro'
+import Stage from '../../components/Stage.astro'
+
+export async function getStaticPaths() {
+  const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
+  return apps.map((app, i) => ({
+    params: { slug: app.id },
+    props: { app, next: apps[(i + 1) % apps.length] },
+  }))
+}
+
+const { app, next } = Astro.props
+const { name, tagline, chips, link, screenshot, screenshotAlt, goalsTitle, goals, features } = app.data
+const { Content } = await render(app)
+const goalColors = ['#C4365F', '#6B3FD0']
+---
+
+<Base title={name} description={tagline}>
+  <section class="wrap" style="padding-top: 40px; padding-bottom: 72px">
+    <a class="link in" href="/#apps" style="font-weight: 500; font-size: 15px; color: var(--muted); text-decoration: none">
+      <Arrow back /> All apps
+    </a>
+    <div class="cols" style="margin-top: 40px">
+      <div class="s8 stack" style="--gap: 24px">
+        <div class="in" style="--i: 1"><AppIcon app={app} size={96} /></div>
+        <h1 class="h1 in" style="--i: 2">{name}</h1>
+        <p class="in" style="--i: 3; max-width: 680px; font-size: 24px; line-height: 1.4; color: var(--ink-2)">{tagline}</p>
+        {chips.length > 0 && <ul class="chips in" style="--i: 4">{chips.map((chip) => <li>{chip}</li>)}</ul>}
+        <div class="actions in" style="--i: 5">
+          {link && <a class="button" href={link.href}>{link.label}</a>}
+          <a class="link" href="#story">Read the story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom: 136px">
+    <Stage tall><Shot src={screenshot} alt={screenshotAlt} label={`${name} screenshot`} /></Stage>
+  </section>
+
+  <section id="story" class="wrap section">
+    <div class="cols">
+      <h2 class="h2 s4 rvl">The story behind it</h2>
+      <div class="prose s7 end rv"><Content /></div>
+    </div>
+  </section>
+
+  {
+    goals.length > 0 && (
+      <section class="wrap section">
+        {goalsTitle && <h2 class="h2 rvl" style="margin-bottom: 32px">{goalsTitle}</h2>}
+        <div class="cols">
+          {goals.map((goal, i) => (
+            <div class:list={['card panel s6', i % 2 ? 'rv' : 'rvl']}>
+              <h3 class="h3" style={`font-style: italic; font-size: 28px; color: ${goalColors[i % 2]}`}>{goal.title}</h3>
+              <p class="body">{goal.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    features.length > 0 && (
+      <section class="wrap features" style="padding-bottom: 136px">
+        {features.map((feature, i) => {
+          const frame = (
+            <div class:list={['s7', i % 2 ? 'end rv' : 'rvl']}>
+              <div class="frame feature-frame">
+                <Shot src={feature.screenshot} alt={feature.alt} label={`Screenshot: ${feature.title}`} />
+              </div>
+            </div>
+          )
+          const text = (
+            <div class:list={['s4 stack', i % 2 ? 'rvl' : 'end rv']} style="--gap: 14px">
+              <h3 class="h3">{feature.title}</h3>
+              <p class="body">{feature.body}</p>
+            </div>
+          )
+          return <div class="cols center">{i % 2 ? [text, frame] : [frame, text]}</div>
+        })}
+      </section>
+    )
+  }
+
+  <section class="wrap" style="padding-bottom: 96px">
+    <div class="rv">
+      <a class="card" href={`/apps/${next.id}`} style="align-items: center; gap: 20px; padding: 28px">
+        <AppIcon app={next} size={64} />
+        <span class="card-text" style="gap: 4px">
+          <span class="eyebrow" style="font-size: 14px; font-weight: 600">Next app</span>
+          <span class="h3" style="font-size: 28px">{next.data.name}</span>
+        </span>
+        <Arrow />
+      </a>
+    </div>
+  </section>
+</Base>
