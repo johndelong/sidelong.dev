@@ -106,6 +106,29 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
   addEventListener('scroll', request, { passive: true })
   addEventListener('resize', request)
 
+  // When scrolling stops partway through the entrance, finish the move in the direction
+  // the visitor was going: down into the room, or back up to the entrance.
+  let lastY = scrollY
+  let goingDown = true
+  let settle = 0
+  addEventListener(
+    'scroll',
+    () => {
+      if (scrollY !== lastY) goingDown = scrollY > lastY
+      lastY = scrollY
+      clearTimeout(settle)
+      settle = window.setTimeout(snap, 140) // after the last scroll event, momentum included
+    },
+    { passive: true },
+  )
+  const snap = () => {
+    const journey = document.getElementById('journey')
+    if (!journey || calm.matches || phone.matches) return
+    const end = room(journey)
+    if (scrollY <= journey.offsetTop + 1 || scrollY >= end - 1) return
+    scrollTo({ top: goingDown ? end : journey.offsetTop, behavior: 'smooth' })
+  }
+
   document.addEventListener('astro:page-load', () => {
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
