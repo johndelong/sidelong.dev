@@ -21,7 +21,7 @@ const { Content } = await render(app)
 const theme = Object.entries({ wallpaper: `linear-gradient(135deg, ${app.data.gradient})`, ...app.data.theme })
   .map(([token, value]) => `--${token}: ${value}`)
   .join('; ')
-const goalColors = ['var(--accent)', 'var(--accent-2)']
+const goalColors = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)']
 ---
 
 <Base title={name} description={tagline} theme={theme}>
@@ -60,8 +60,8 @@ const goalColors = ['var(--accent)', 'var(--accent-2)']
         {goalsTitle && <h2 class="h2 rvl" style="margin-bottom: 32px">{goalsTitle}</h2>}
         <div class="cols">
           {goals.map((goal, i) => (
-            <div class:list={['card panel s6', i % 2 ? 'rv' : 'rvl']}>
-              <h3 class="h3" style={`font-style: italic; font-size: 28px; color: ${goalColors[i % 2]}`}>{goal.title}</h3>
+            <div class:list={['card panel', goals.length % 3 ? 's6' : 's4', i ? 'rv' : 'rvl']}>
+              <h3 class="h3" style={`font-style: italic; font-size: 28px; color: ${goalColors[i % goalColors.length]}`}>{goal.title}</h3>
               <p class="body">{goal.body}</p>
             </div>
           ))}
