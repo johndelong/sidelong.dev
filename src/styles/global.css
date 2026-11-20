@@ -492,19 +492,43 @@ a.card:hover {
   text-align: center;
 }
 
+/* Screenshots are 16:9 and shown whole: never cropped to fit their frame */
 .frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top left;
+  object-fit: contain;
+}
+
+/* A real window capture brings its own corners and title bar, so the frame steps back
+   and the shadow follows the window's shape */
+.frame:has(img),
+.shot.frame:has(img) {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.frame:has(img) img {
+  filter: drop-shadow(-14px 22px 32px var(--shadow));
 }
 
 .shot.frame {
   box-shadow: -18px 28px 60px var(--shadow);
 }
 
+/* The hero frame is 16:9, as large as the stage allows in either direction */
+.stage-front .shot {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+}
+
 .feature-frame {
-  height: 400px;
+  aspect-ratio: 16 / 9;
 }
 
 .features {
@@ -657,15 +681,113 @@ a.card:hover {
     height: 300px;
   }
 
-  .feature-frame {
-    height: 240px;
-  }
-
   .features {
     gap: 64px;
   }
 
   .nav {
     gap: 20px;
+  }
+}
+
+/* Screenshots open large on click: the page dims and blurs, the image fills the view */
+/* A ring around the window on hover (and keyboard focus) says it can be opened. The corners
+   follow the window's own: 42px on a 2880 x 1620 capture, kept in proportion at any size. */
+img.zoomable {
+  cursor: zoom-in;
+  border-radius: 1.46% / 2.6%;
+  outline: 2px solid transparent;
+  outline-offset: 6px;
+  transition: outline-color 0.25s ease;
+}
+
+img.zoomable:focus-visible {
+  outline-color: var(--accent);
+}
+
+@media (hover: hover) {
+  img.zoomable:hover {
+    outline-color: var(--accent);
+  }
+}
+
+html.zooming {
+  overflow: hidden;
+}
+
+dialog.zoom {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: clamp(16px, 4vw, 56px);
+  border: 0;
+  background: none;
+  overflow: hidden;
+  cursor: zoom-out;
+}
+
+dialog.zoom::backdrop {
+  background: rgba(12, 9, 14, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+dialog.zoom.is-open::backdrop {
+  opacity: 1;
+}
+
+dialog.zoom img {
+  max-width: none; /* sized exactly by zoom.ts */
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
+  transform-origin: 0 0; /* it grows from the screenshot's top-left corner, matching the math in zoom.ts */
+}
+
+.zoom-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    background 0.2s ease;
+}
+
+dialog.zoom.is-open .zoom-close {
+  opacity: 1;
+}
+
+.zoom-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.zoom-close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.zoom::backdrop,
+  .zoom-close {
+    transition: none;
   }
 }

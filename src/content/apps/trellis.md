@@ -6,6 +6,8 @@ summary: A private, local-first desktop app for engineering managers. Trellis he
 tagline: Helps you advocate for the people who deserve to grow, and shows them exactly how to get there.
 gradient: '#FF8A5B, #E8508A 55%, #7B4AE2'
 icon: /apps/trellis/icon.png
+screenshot: /apps/trellis/assessments.webp
+screenshotAlt: "Trellis showing a sample team member's readiness for the next level: an 88% readiness score with a trend chart, and a role-fit scan scoring each attribute against her current level."
 chips:
   - For engineering managers
   - Desktop
@@ -38,14 +40,24 @@ goals:
 features:
   - title: The growth map
     body: Every attribute at every level of the ladder, each with a plain-language definition of what Meets looks like, sorted into strengths, developing, future and goals.
+    screenshot: /apps/trellis/development.webp
+    alt: "Trellis's Development tab for a sample team member: goals, strengths and developing attributes, each with what the next level looks like and dated progress notes."
   - title: Role-fit assessments
     body: Score each attribute against the person's current level. Meets is today's level and Exceeds is the next, so an assessment answers whether they're already operating a level up.
+    screenshot: /apps/trellis/scoring.webp
+    alt: "Scoring one attribute in a Trellis assessment: four plain-language descriptions, from Below to Exceeds, to pick the one that matches what you've seen."
   - title: 1:1 notes, newest first
     body: Notes for each person read like a journal, with today at the top. A search bar finds anything you've talked about before.
+    screenshot: /apps/trellis/oneonones.webp
+    alt: "Trellis 1:1 notes for a sample team member, newest first, next to a summary of her strengths and growth areas."
   - title: Private, local-first vaults
     body: Your data lives in an encrypted vault on your machine, never on a server. Put the folder in iCloud, OneDrive or Google Drive for sync and backup.
+    screenshot: /apps/trellis/locked.webp
+    alt: "Trellis's unlock screen, asking for the password to a vault called Our team."
   - title: Vaults for team leads
     body: Split part of your team into its own vault for a lead. They see only the people they manage, and you still see everyone.
+    screenshot: /apps/trellis/split.webp
+    alt: "Selecting two people in Trellis to split off into a new vault for their team lead."
 ---
 
 I've been working on the same problem for about four years. Back in 2022, leading the development practice at a previous company, I wrote down that the thing I most wanted to pursue was mapping out career paths for our developers. The question I kept fumbling was the one that matters most to the people I lead: how do I grow from here? Without something concrete behind them, my answers felt subjective. People left our conversations unsure what else they could be doing, and when someone was pushing for a promotion, that uncertainty turned into frustration.
