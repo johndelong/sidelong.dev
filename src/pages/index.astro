@@ -1,13 +1,9 @@
 ---
 // The entrance. A flat dot grid with the sidelong plane on it; as you scroll, the grid tilts
 // away into a floor and a door stands up for each place on the site. Scroll back up to return.
-import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
-import AppIcon from '../components/AppIcon.astro'
 import Header from '../components/Header.astro'
 import { site } from '../site'
-
-const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
 ---
 
 <Base immersive>
@@ -28,18 +24,10 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
                 return (
                   <div class="place" style={`--x: ${place.x}px; --d: ${place.d}px; --c: linear-gradient(135deg, ${place.colors}); --i: ${i}`}>
                     <span class="pool" aria-hidden="true" />
-                    <Door class:list={['door', { big: place.big, closed: !place.href }]} href={place.href || undefined}>
+                    <Door class:list={['door', { big: place.big, closed: !place.href, ink: place.ink }]} href={place.href || undefined}>
                       <span class="stand">
                         <span class="slab">
-                          {place.href === '/apps' && (
-                            <span class="icons">
-                              {apps.map((app) => <AppIcon app={app} size={38} />)}
-                            </span>
-                          )}
-                        </span>
-                        <span class="tag">
-                          <b><i aria-hidden="true" />{place.label}</b>
-                          <small>{place.href ? place.sub : 'Coming soon'}</small>
+                          <span class="name">{place.label}</span>
                         </span>
                       </span>
                     </Door>
@@ -316,38 +304,35 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
     transform: translateY(calc((1 - var(--show)) * 70px));
   }
 
-  /* Doors are plain; the colour shows as a line of light underneath, and fills the door on hover */
+  /* Each door wears its own colour, with its name on it in the wordmark's type */
   .slab {
     position: relative;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 190px;
     height: 260px;
     overflow: hidden;
-    border: 1px solid var(--line);
     border-radius: 28px;
-    background: var(--surface);
-    box-shadow: -18px 24px 50px var(--shadow);
+    background: var(--c);
+    color: #fff;
     transform: skewX(calc(var(--angle) * -1));
     transition: transform 0.5s var(--ease);
   }
 
-  .slab::before,
+  .ink .slab {
+    color: #1f1a24;
+  }
+
+  /* A little light across the door on hover */
   .slab::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--c);
-  }
-
-  .slab::before {
+    background: #fff;
     opacity: 0;
     transition: opacity 0.5s ease;
-  }
-
-  .slab::after {
-    top: auto;
-    height: 8px;
   }
 
   .big .slab {
@@ -360,58 +345,29 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
     transform: skewX(calc(var(--angle) * -1)) translateY(-12px);
   }
 
-  a.door:hover .slab::before,
-  a.door:focus-visible .slab::before {
-    opacity: 1;
+  a.door:hover .slab::after,
+  a.door:focus-visible .slab::after {
+    opacity: 0.12;
   }
 
-  .closed .slab {
-    opacity: 0.7;
-  }
-
-  .icons {
+  .name {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(3, 38px);
-    gap: 12px;
-    justify-content: center;
+    padding: 0 16px;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-align: center;
     transform: skewX(var(--angle));
   }
 
-  .tag {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 8px 16px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: var(--surface);
-    box-shadow: 0 8px 20px var(--shadow);
-    white-space: nowrap;
+  .big .name {
+    font-size: 40px;
   }
 
-  .tag b {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--display);
-    font-size: 19px;
-    letter-spacing: -0.01em;
-  }
-
-  .tag i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--c);
-  }
-
-  .tag small {
-    font-size: 13px;
-    color: var(--muted);
-  }
 
   /* The entrance: wordmark on the plane, a greeting and one button. Fades as you scroll. */
   .intro {
@@ -596,17 +552,27 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
     .slab,
     .big .slab {
       width: auto;
-      height: 180px;
     }
 
     .stand {
       align-items: stretch;
     }
 
-    .tag {
-      white-space: normal;
-      text-align: center;
+    .slab,
+    .big .slab {
+      height: auto;
+      min-height: 180px;
+      padding: 20px 0;
     }
+
+    .name {
+      font-size: 22px;
+    }
+
+    .big .name {
+      font-size: 28px;
+    }
+
   }
 
   /* Reduced motion: no scroll-through; you start in the room */
