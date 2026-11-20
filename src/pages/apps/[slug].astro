@@ -17,12 +17,16 @@ export async function getStaticPaths() {
 const { app, next } = Astro.props
 const { name, tagline, chips, link, screenshot, screenshotAlt, goalsTitle, goals, features } = app.data
 const { Content } = await render(app)
-const goalColors = ['#C4365F', '#6B3FD0']
+// Each app page wears the app's colours: its gradient on the plane, plus any tokens it overrides
+const theme = Object.entries({ wallpaper: `linear-gradient(135deg, ${app.data.gradient})`, ...app.data.theme })
+  .map(([token, value]) => `--${token}: ${value}`)
+  .join('; ')
+const goalColors = ['var(--accent)', 'var(--accent-2)']
 ---
 
-<Base title={name} description={tagline}>
+<Base title={name} description={tagline} theme={theme}>
   <section class="wrap" style="padding-top: 40px; padding-bottom: 72px">
-    <a class="link in" href="/#apps" style="font-weight: 500; font-size: 15px; color: var(--muted); text-decoration: none">
+    <a class="link in" href="/apps" style="font-weight: 500; font-size: 15px; color: var(--muted); text-decoration: none">
       <Arrow back /> All apps
     </a>
     <div class="cols" style="margin-top: 40px">

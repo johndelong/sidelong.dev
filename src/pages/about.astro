@@ -9,9 +9,9 @@ import { site } from '../site'
 const portrait = undefined
 
 const principles = [
-  { title: '[Principle one]', body: '[A sentence on what it means in practice.]', color: '#C24A22' },
-  { title: '[Principle two]', body: '[A sentence on what it means in practice.]', color: '#C4365F' },
-  { title: '[Principle three]', body: '[A sentence on what it means in practice.]', color: '#6B3FD0' },
+  { title: '[Principle one]', body: '[A sentence on what it means in practice.]', color: 'var(--accent-3)' },
+  { title: '[Principle two]', body: '[A sentence on what it means in practice.]', color: 'var(--accent)' },
+  { title: '[Principle three]', body: '[A sentence on what it means in practice.]', color: 'var(--accent-2)' },
 ]
 ---
 
@@ -69,7 +69,7 @@ const principles = [
         <div class="actions" style="gap: 8px 32px">
           {site.contact.map((item) => <a class="link" href={item.href}>{item.label}</a>)}
         </div>
-        <a class="link" href="/#apps">See the apps <Arrow /></a>
+        <a class="link" href="/apps">See the apps <Arrow /></a>
       </div>
     </div>
   </section>

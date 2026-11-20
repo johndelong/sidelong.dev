@@ -11,6 +11,21 @@ chips:
   - Desktop
   - Local-first
   - Encrypted vault
+theme:
+  color-scheme: dark
+  ground: "#1a1512"
+  surface: "#241d18"
+  ink: "#f3e7da"
+  ink-2: "#e4d5c5"
+  muted: "#bdab9a"
+  line: rgba(243, 231, 218, 0.14)
+  accent: "#e8b08a"
+  accent-2: "#d79a72"
+  accent-hover: "#f0cdaa"
+  dot: rgba(243, 231, 218, 0.11)
+  dot-hot: rgba(232, 176, 138, 0.95)
+  shadow: rgba(0, 0, 0, 0.5)
+  wallpaper: "linear-gradient(135deg, #f0cdaa 0%, #c98b66 42%, #4a3528 100%)"
 goalsTitle: Two goals drive everything in it
 goals:
   - title: Make the case.

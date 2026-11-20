@@ -3,7 +3,7 @@ import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
 import { site } from '../site'
 
-const { title, description = site.intro } = Astro.props
+const { title, description = site.intro, theme, immersive = false } = Astro.props
 const path = Astro.url.pathname
 ---
 
@@ -23,7 +23,9 @@ const path = Astro.url.pathname
     />
     <ClientRouter />
   </head>
-  <body>
+  <body style={theme}>
+    {immersive ? <slot /> : (
+    <Fragment>
     <div class="dotlight" aria-hidden="true"></div>
     <div class="page">
       <header class="wrap header in">
@@ -34,7 +36,7 @@ const path = Astro.url.pathname
           {site.name}
         </a>
         <nav class="nav">
-          <a class="link" href="/#apps" aria-current={path.startsWith('/apps') ? 'page' : undefined}>Apps</a>
+          <a class="link" href="/apps" aria-current={path.startsWith('/apps') ? 'page' : undefined}>Apps</a>
           <a class="link" href="/about" aria-current={path.startsWith('/about') ? 'page' : undefined}>About</a>
         </nav>
       </header>
@@ -46,6 +48,8 @@ const path = Astro.url.pathname
         </div>
       </footer>
     </div>
+    </Fragment>
+    )}
     <script>
       // Feed the pointer to CSS: --mx leans the plane, --px/--py light the dots.
       const root = document.documentElement

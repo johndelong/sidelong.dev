@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import AppIcon from '../../components/AppIcon.astro'
+import Arrow from '../../components/Arrow.astro'
+import Shot from '../../components/Shot.astro'
+import Stage from '../../components/Stage.astro'
+import { site } from '../../site'
+
+const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
+const featured = apps.find((app) => app.data.featured) ?? apps[0]
+const others = apps.filter((app) => app !== featured)
+---
+
+<Base title="Software">
+  <section class="wrap" style="padding-top: 104px; padding-bottom: 96px">
+    <div class="cols">
+      <div class="s8 stack" style="--gap: 24px">
+        <p class="eyebrow in" style="--i: 1">Software</p>
+        <h1 class="h1 in" style="--i: 2">Software made on the side, seen from an <em>angle.</em></h1>
+        <p class="lede in" style="--i: 3">I'm {site.author}. {site.intro}</p>
+        <div class="actions in" style="--i: 5">
+          <a class="button" href="#apps">See all {apps.length}</a>
+          <a class="link" href="/about">About me</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="cols center">
+      <div class="s5 stack in" style="--i: 6">
+        <AppIcon app={featured} size={72} />
+        <p class="eyebrow" style="font-size: 14px; font-weight: 600">Featured</p>
+        <h2 class="h1" style="font-size: 48px">{featured.data.name}</h2>
+        <p class="body" style="font-size: 19px">{featured.data.summary}</p>
+        <a class="link" href={`/apps/${featured.id}`}>The story behind {featured.data.name} <Arrow /></a>
+      </div>
+      <div class="s7">
+        <Stage href={`/apps/${featured.id}`}>
+          <Shot
+            src={featured.data.screenshot}
+            alt={featured.data.screenshotAlt}
+            label={`${featured.data.name} screenshot`}
+          />
+        </Stage>
+      </div>
+    </div>
+  </section>
+
+  <section id="apps" class="wrap" style="padding-bottom: 96px">
+    <div class="rv" style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 32px">
+      <h2 class="h2">More apps</h2>
+      <p class="eyebrow">{others.length} more, each with its own page and story.</p>
+    </div>
+    <ul class="cards">
+      {
+        others.map((app) => (
+          <li class="rv">
+            <a class="card" href={`/apps/${app.id}`}>
+              <AppIcon app={app} />
+              <span class="card-text">
+                <span class="card-name">{app.data.name}</span>
+                <span class="card-sub">{app.data.summary}</span>
+              </span>
+              <Arrow />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

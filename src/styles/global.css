@@ -11,6 +11,33 @@
   --wallpaper: linear-gradient(135deg, #ffc9a3 0%, #ff8266 34%, #f2599c 64%, #7c4de0 100%);
   --display: 'Inter Tight', Inter, system-ui, sans-serif;
   --dots: 32px;
+  --accent-2: #6b3fd0;
+  --accent-3: #c24a22;
+  --accent-hover: #b8355c;
+  --dot: rgba(31, 26, 36, 0.16);
+  --dot-hot: rgba(240, 86, 110, 0.95);
+  --shadow: rgba(60, 20, 80, 0.16);
+  color-scheme: light;
+}
+
+/* Dark mode follows the visitor's system setting */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #17121f;
+    --surface: #211a2c;
+    --ink: #f4eef7;
+    --ink-2: #ddd2e6;
+    --muted: #b9aec4;
+    --line: rgba(255, 255, 255, 0.11);
+    --accent: #ff8fa8;
+    --accent-2: #b79bff;
+    --accent-3: #ffa57a;
+    --accent-hover: #ffb894;
+    --dot: rgba(255, 255, 255, 0.1);
+    --dot-hot: rgba(255, 160, 130, 0.9);
+    --shadow: rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
 }
 
 html {
@@ -19,9 +46,10 @@ html {
 
 body {
   position: relative;
+  color-scheme: var(--color-scheme); /* an app theme can force light or dark */
   margin: 0;
   background-color: var(--ground);
-  background-image: radial-gradient(rgba(31, 26, 36, 0.16) 1px, transparent 1.6px);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.6px);
   background-size: var(--dots) var(--dots);
   background-position: center top;
   color: var(--ink);
@@ -34,7 +62,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(240, 86, 110, 0.95) 1.3px, transparent 1.9px);
+  background-image: radial-gradient(var(--dot-hot) 1.3px, transparent 1.9px);
   background-size: var(--dots) var(--dots);
   background-position: center top;
   -webkit-mask-image: radial-gradient(240px 240px at var(--px, -999px) var(--py, -999px), #000, transparent 72%);
@@ -64,7 +92,7 @@ a {
 }
 
 a:hover {
-  color: #b8355c;
+  color: var(--accent-hover);
 }
 
 :focus-visible {
@@ -220,7 +248,7 @@ a:hover {
   justify-content: space-between;
   gap: 16px;
   padding: 28px 0 40px;
-  border-top: 1px solid rgba(31, 26, 36, 0.12);
+  border-top: 1px solid var(--line);
   font-size: 14px;
   color: var(--muted);
 }
@@ -262,14 +290,14 @@ a:hover > .arrow.back {
   padding: 0 24px;
   border-radius: 999px;
   background: var(--ink);
-  color: #fff;
+  color: var(--ground);
   font-weight: 600;
   text-decoration: none;
   transition: transform 0.45s var(--ease);
 }
 
 .button:hover {
-  color: #fff;
+  color: var(--ground);
   transform: translateX(3px);
 }
 
@@ -288,12 +316,12 @@ a:hover > .arrow.back {
 
 .chips li {
   padding: 6px 12px;
-  border: 1px solid rgba(31, 26, 36, 0.14);
+  border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
   font-size: 14px;
   font-weight: 500;
-  color: #4a4252;
+  color: var(--ink-2);
 }
 
 /* App icons */
@@ -426,7 +454,7 @@ a.card:hover {
   border-radius: 14px;
   background: var(--surface);
   border: 1px solid var(--line);
-  box-shadow: -14px 22px 48px rgba(60, 20, 80, 0.14);
+  box-shadow: -14px 22px 48px var(--shadow);
   font-size: 15px;
   color: var(--muted);
   text-align: center;
@@ -440,7 +468,7 @@ a.card:hover {
 }
 
 .shot.frame {
-  box-shadow: -18px 28px 60px rgba(60, 20, 80, 0.22);
+  box-shadow: -18px 28px 60px var(--shadow);
 }
 
 .feature-frame {
