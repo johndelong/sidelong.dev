@@ -1,0 +1,38 @@
+---
+// The one header on every page: the brand on the left, the section you're in beside it, and the
+// other open doors on the right. It is the same box everywhere, so moving between pages only
+// fades what changes. In the room on the home page the doors themselves are the navigation,
+// so the right side is empty there.
+import { site } from '../site'
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+const open = site.places.filter((place) => place.href)
+const here = open.find((place) => path === place.href || path.startsWith(`${place.href}/`))
+const others = path === '/' ? [] : open.filter((place) => place !== here)
+const { id } = Astro.props
+---
+
+<header class="wrap header">
+  <div class="trail">
+    <a class="brand" id={id} href="/" transition:name="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M10 6h18l-4 20H6z" fill="#F0566E" stroke="#F0566E" stroke-width="3" stroke-linejoin="round"></path>
+      </svg>
+      {site.name}
+    </a>
+    {
+      here && (
+        <a class="crumb" href={here.href} aria-current={path === here.href ? 'page' : undefined} transition:name="crumb">
+          {here.label}
+        </a>
+      )
+    }
+  </div>
+  {
+    others.length > 0 && (
+      <nav class="nav" aria-label="Elsewhere" transition:name="nav">
+        {others.map((place) => <a href={place.href}>{place.label}</a>)}
+      </nav>
+    )
+  }
+</header>

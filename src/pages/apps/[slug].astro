@@ -25,11 +25,8 @@ const goalColors = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)']
 ---
 
 <Base title={name} description={tagline} theme={theme}>
-  <section class="wrap" style="padding-top: 40px; padding-bottom: 72px">
-    <a class="link in" href="/apps" style="font-weight: 500; font-size: 15px; color: var(--muted); text-decoration: none">
-      <Arrow back /> All apps
-    </a>
-    <div class="cols" style="margin-top: 40px">
+  <section class="wrap" style="padding-top: 80px; padding-bottom: 72px">
+    <div class="cols">
       <div class="s8 stack" style="--gap: 24px">
         <div class="in" style="--i: 1"><AppIcon app={app} size={96} /></div>
         <h1 class="h1 in" style="--i: 2">{name}</h1>

@@ -2,9 +2,9 @@
 import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
 import { site } from '../site'
+import Header from '../components/Header.astro'
 
 const { title, description = site.intro, theme, immersive = false } = Astro.props
-const path = Astro.url.pathname
 ---
 
 <!doctype html>
@@ -28,18 +28,7 @@ const path = Astro.url.pathname
     <Fragment>
     <div class="dotlight" aria-hidden="true"></div>
     <div class="page">
-      <header class="wrap header in">
-        <a class="brand" href="/">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M10 6h18l-4 20H6z" fill="#F0566E" stroke="#F0566E" stroke-width="3" stroke-linejoin="round"></path>
-          </svg>
-          {site.name}
-        </a>
-        <nav class="nav">
-          <a class="link" href="/apps" aria-current={path.startsWith('/apps') ? 'page' : undefined}>Apps</a>
-          <a class="link" href="/about" aria-current={path.startsWith('/about') ? 'page' : undefined}>About</a>
-        </nav>
-      </header>
+      <Header />
       <main><slot /></main>
       <footer class="wrap">
         <div class="footer">

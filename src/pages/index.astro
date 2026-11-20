@@ -4,6 +4,7 @@
 import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import AppIcon from '../components/AppIcon.astro'
+import Header from '../components/Header.astro'
 import { site } from '../site'
 
 const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
@@ -11,6 +12,8 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
 
 <Base immersive>
   <div class="journey" id="journey">
+    <span class="rest at-door" aria-hidden="true"></span>
+    <span class="rest at-room" aria-hidden="true"></span>
     <div class="scene" id="scene">
       <div class="sky" aria-hidden="true"></div>
 
@@ -59,17 +62,9 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
         </div>
       </div>
 
-      <header class="top">
-        <a class="brand" id="home" href="/">
-          <svg viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M10 6h18l-4 20H6z" fill="#F0566E" stroke="#F0566E" stroke-width="3" stroke-linejoin="round"></path>
-          </svg>
-          {site.name}
-        </a>
-        <p class="where">Where would you like to go?</p>
-      </header>
-
       <div class="flood" aria-hidden="true"></div>
+
+      <div class="top"><Header id="home" /></div>
     </div>
   </div>
 </Base>
@@ -106,29 +101,6 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
   addEventListener('scroll', request, { passive: true })
   addEventListener('resize', request)
 
-  // When scrolling stops partway through the entrance, finish the move in the direction
-  // the visitor was going: down into the room, or back up to the entrance.
-  let lastY = scrollY
-  let goingDown = true
-  let settle = 0
-  addEventListener(
-    'scroll',
-    () => {
-      if (scrollY !== lastY) goingDown = scrollY > lastY
-      lastY = scrollY
-      clearTimeout(settle)
-      settle = window.setTimeout(snap, 140) // after the last scroll event, momentum included
-    },
-    { passive: true },
-  )
-  const snap = () => {
-    const journey = document.getElementById('journey')
-    if (!journey || calm.matches || phone.matches) return
-    const end = room(journey)
-    if (scrollY <= journey.offsetTop + 1 || scrollY >= end - 1) return
-    scrollTo({ top: goingDown ? end : journey.offsetTop, behavior: 'smooth' })
-  }
-
   document.addEventListener('astro:page-load', () => {
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
@@ -150,6 +122,15 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
       scrollTo({ top: 0, behavior: calm.matches ? 'instant' : 'smooth' })
     })
 
+    // The room leans with the pointer, which moves the doors under it. While a door is hovered,
+    // hold the lean still so the door can't slide out from under the pointer and flicker.
+    scene.querySelectorAll<HTMLElement>('.door').forEach((door) => {
+      door.addEventListener('pointerenter', () => {
+        scene.style.setProperty('--mx', getComputedStyle(document.documentElement).getPropertyValue('--mx') || '0.5')
+      })
+      door.addEventListener('pointerleave', () => scene.style.removeProperty('--mx'))
+    })
+
     // Walking through a door: move toward it, let its colour fill the view, then go.
     scene.querySelectorAll<HTMLAnchorElement>('a.door').forEach((door) => {
       door.addEventListener('click', (e) => {
@@ -168,7 +149,29 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
 <style>
   /* Extra height to scroll through; the scene stays pinned while the scroll plays it */
   .journey {
+    position: relative;
     height: 240svh;
+  }
+
+  /* The two places the scroll comes to rest: the entrance and the room. The browser carries
+     the visitor's own momentum into whichever one they're heading for. */
+  .rest {
+    position: absolute;
+    left: 0;
+    height: 1px;
+    scroll-snap-align: start;
+  }
+
+  .rest.at-room {
+    top: calc(100% - 100svh);
+  }
+
+  .rest.at-door {
+    top: 0;
+  }
+
+  :global(html:has(.journey)) {
+    scroll-snap-type: y mandatory;
   }
 
   .scene {
@@ -474,30 +477,19 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
     transform: translateY(3px);
   }
 
-  /* Inside: the brand (which takes you back up) and a prompt */
+  /* Inside: the shared header, fading in as you arrive. The brand takes you back up. */
   .top {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 88px;
-    padding: 0 80px;
+    z-index: 1;
     opacity: clamp(0, calc((var(--p) - 0.7) * 4), 1);
     pointer-events: none;
   }
 
   .is-in .top {
     pointer-events: auto;
-  }
-
-  .where {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--muted);
   }
 
   .flood {
@@ -517,6 +509,14 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
   @media (max-width: 820px) {
     .journey {
       height: auto;
+    }
+
+    :global(html:has(.journey)) {
+      scroll-snap-type: none;
+    }
+
+    .rest {
+      display: none;
     }
 
     .scene {
@@ -613,6 +613,14 @@ const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.
   @media (prefers-reduced-motion: reduce) {
     .journey {
       height: auto;
+    }
+
+    :global(html:has(.journey)) {
+      scroll-snap-type: none;
+    }
+
+    .rest {
+      display: none;
     }
 
     .scene,
