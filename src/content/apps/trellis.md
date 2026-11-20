@@ -2,8 +2,8 @@
 name: Trellis
 order: 1
 featured: true
-summary: A private, local-first desktop app for engineering managers. Trellis helps you advocate for the people who deserve to grow, and shows them exactly how to get there.
-tagline: Helps you advocate for the people who deserve to grow, and shows them exactly how to get there.
+summary: A private, local-first desktop app for engineering managers. Trellis helps every person on your team see where they can grow, and helps you get them there.
+tagline: Helps every person on your team see where they can grow, and helps you get them there.
 gradient: '#FF8A5B, #E8508A 55%, #7B4AE2'
 icon: /apps/trellis/icon.png
 screenshot: /apps/trellis/assessments.webp
@@ -32,7 +32,7 @@ theme:
 goalsTitle: Three goals drive everything in it
 goals:
   - title: Make the case.
-    body: Build the evidence, from assessments, feedback and compensation context, so the people who've earned a promotion actually get recognized and championed at calibration.
+    body: Build the evidence, from assessments, feedback and compensation context, so the growth people have shown gets recognized and championed at calibration.
   - title: Light the path.
     body: "Give each person an honest, concrete picture of how to grow: what they're already meeting, what the next level asks for, and what's currently holding them back."
   - title: Remember what matters.
