@@ -1,7 +1,7 @@
 ---
-// The entrance. A flat dot grid with the sidelong plane on it; as you scroll, the grid tilts
-// away into a floor and the doors stand up in a ring around the mat. Each further scroll stop
-// turns the ring one step, so every door gets its turn at the front. Scroll back up to return.
+// The entrance. A flat dot grid with the sidelong plane on it; as you scroll down, the grid tilts
+// away into a floor and the doors stand up in a ring around the mat. Inside, scrolling sideways
+// turns the ring one door at a time, all the way round either way. Scroll back up to return.
 import Base from '../layouts/Base.astro'
 import Header from '../components/Header.astro'
 import { site } from '../site'
@@ -10,12 +10,19 @@ const places = site.places
 ---
 
 <Base immersive>
+  <div class="scroller" id="scroller">
   <div class="journey" id="journey" style={`--n: ${places.length}`}>
     <span class="rest" style="top: 0" aria-hidden="true"></span>
-    {/* One stop per door, plus one more where the ring has come full circle */}
-    {[...places, null].map((_, i) => <span class="rest" style={`top: calc(var(--tilt-span) + ${i} * var(--step))`} aria-hidden="true" />)}
+    <span class="rest" style="top: var(--tilt-span)" aria-hidden="true"></span>
 
     <div class="scene" id="scene">
+      {/* The sideways scroll that turns the ring: one stop per door, plus one either side of them
+          that looks just like the door at the other end, so the ring can keep going round */}
+      <div class="track" aria-hidden="true">
+        {[null, ...places, null].map(() => <span />)}
+      </div>
+
+      <div class="view">
       <div class="sky" aria-hidden="true"></div>
 
       <div class="world">
@@ -87,7 +94,9 @@ const places = site.places
       <div class="flood" aria-hidden="true"></div>
 
       <div class="top"><Header id="home" /></div>
+      </div>
     </div>
+  </div>
   </div>
 </Base>
 
@@ -96,16 +105,30 @@ const places = site.places
 
   const calm = matchMedia('(prefers-reduced-motion: reduce)')
   const clamp = (n: number, max = 1) => Math.min(max, Math.max(0, n))
+  const wrap = (i: number, n: number) => ((i % n) + n) % n
 
-  // The scroll stops: the entrance first, then one for each door at the front of the ring.
+  // Down and up: in and out of the room. On touch screens that scroll happens inside its own
+  // full-screen box, not the page (see .scroller in the styles), so Safari keeps its toolbar still
+  // and the viewport doesn't resize mid-swipe. Everything reads and moves it through here.
+  const touch = matchMedia('(hover: none) and (pointer: coarse)')
+  const box = () => (touch.matches ? document.getElementById('scroller') : null)
+  const scrolled = () => box()?.scrollTop ?? scrollY
+  const go = (top: number, behavior: ScrollBehavior) => (box() ?? window).scrollTo({ top, behavior })
+
+  // The two places the vertical scroll rests: the entrance, and inside the room.
   const stops = (journey: HTMLElement) =>
     [...journey.querySelectorAll<HTMLElement>('.rest')].map((rest) => journey.offsetTop + rest.offsetTop)
 
-  let turned = 0 // which door is at the front when there is no scrolling to say (reduced motion)
+  // Sideways: the scene scrolls across a track of n + 2 stops, a screen wide each. Stop 0 stands
+  // in for the last door and stop n + 1 for the first, so the ring can turn past either end.
+  const turnedTo = (scene: HTMLElement) => scene.scrollLeft / (scene.clientWidth || 1) - 1
+  const turn = (scene: HTMLElement, stop: number, behavior: ScrollBehavior) =>
+    scene.scrollTo({ left: stop * scene.clientWidth, behavior })
+
   let front = 0
   let count = 1
 
-  // Read the scroll into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
+  // Read both scrolls into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
   // and --t, how far the ring has turned (0 for the first door, 1 for the second, and so on).
   let queued = false
   const update = () => {
@@ -113,12 +136,10 @@ const places = site.places
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
     if (!journey || !scene) return
-    const [top, room, next] = stops(journey)
-    count = scene.querySelectorAll('.place').length
-    const p = calm.matches ? 1 : clamp((scrollY - top) / (room - top || 1))
-    // The ring can turn one full circle: at the last stop the first door is at the front again.
-    const t = calm.matches ? turned : clamp((scrollY - room) / (next - room || 1), count)
-    front = Math.round(t) % count
+    const [top, room] = stops(journey)
+    const p = calm.matches ? 1 : clamp((scrolled() - top) / (room - top || 1))
+    const t = turnedTo(scene)
+    front = wrap(Math.round(t), count)
     scene.style.setProperty('--p', p.toFixed(4))
     scene.style.setProperty('--e', (p * p * (3 - 2 * p)).toFixed(4)) // eased, for the tilt
     scene.style.setProperty('--t', t.toFixed(4))
@@ -134,10 +155,13 @@ const places = site.places
   // Find where the mat's front edge lands on screen once you're in the room, so the line of
   // text can sit a fixed distance below it on any screen. The room is posed for a moment
   // (fully tilted, no lean) to take the reading, then put back before anything is painted.
+  // The sideways scroll is put back on the door that was at the front, at the new width.
   const measure = () => {
+    const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
     const edge = scene?.querySelector('.mat-side')
-    if (!scene || !edge) return
+    if (!journey || !scene || !edge) return
+    turn(scene, front + 1, 'instant')
     scene.classList.add('is-measuring')
     scene.style.setProperty('--p', '1')
     scene.style.setProperty('--e', '1')
@@ -149,58 +173,70 @@ const places = site.places
     update()
   }
 
+  // Scroll events from an element don't reach the window, so the box and the scene get their own
+  // listeners (added on page load, as they're new on every visit).
   addEventListener('scroll', request, { passive: true })
+
   addEventListener('resize', measure)
 
-  // Going round again: the stop after the last door looks exactly like the first door's stop,
-  // so once the scroll settles there, hop back to the first without anything moving on screen.
+  // Going round: the stops at either end look exactly like the door at the other end, so once the
+  // ring settles on one, hop to its twin without anything moving on screen.
   let settle = 0
-  addEventListener(
-    'scroll',
-    () => {
-      clearTimeout(settle)
-      settle = window.setTimeout(() => {
-        const journey = document.getElementById('journey')
-        if (!journey || calm.matches) return
-        const all = stops(journey)
-        if (scrollY >= all[all.length - 1] - 2) scrollTo({ top: all[1], behavior: 'instant' })
-      }, 160)
-    },
-    { passive: true },
-  )
-
-  // Bring a door to the front: scroll to its stop, or just turn the ring if motion is reduced.
-  const bring = (i: number) => {
-    const journey = document.getElementById('journey')
-    if (!journey) return
-    if (calm.matches) {
-      turned = i
-      update()
-    } else {
-      // The first door can be reached two ways; take whichever stop is nearer.
-      const all = stops(journey)
-      const ways = i === 0 ? [all[1], all[all.length - 1]] : [all[i + 1]]
-      const top = ways.reduce((a, b) => (Math.abs(b - scrollY) < Math.abs(a - scrollY) ? b : a))
-      scrollTo({ top, behavior: 'smooth' })
-    }
+  const settled = () => {
+    clearTimeout(settle)
+    settle = window.setTimeout(() => {
+      const scene = document.getElementById('scene')
+      if (!scene) return
+      const t = Math.round(turnedTo(scene))
+      if (t < 0) turn(scene, count, 'instant')
+      else if (t >= count) turn(scene, 1, 'instant')
+    }, 160)
   }
+
+  // Bring a door to the front: turn to its stop, or its twin if that's nearer. With reduced
+  // motion the ring jumps there instead of turning.
+  const bring = (i: number) => {
+    const scene = document.getElementById('scene')
+    if (!scene) return
+    i = wrap(i, count)
+    const now = turnedTo(scene)
+    const ways = [i - count, i, i + count].filter((t) => t >= -1 && t <= count)
+    const t = ways.reduce((a, b) => (Math.abs(b - now) < Math.abs(a - now) ? b : a))
+    turn(scene, t + 1, calm.matches ? 'instant' : 'smooth')
+  }
+
+  // The arrow keys turn the ring too, once you're inside.
+  addEventListener('keydown', (e) => {
+    const scene = document.getElementById('scene')
+    if (!scene?.classList.contains('is-in') || e.metaKey || e.ctrlKey || e.altKey) return
+    if (e.target instanceof HTMLElement && e.target.closest('input, textarea, select, [contenteditable]')) return
+    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+    if (!step) return
+    e.preventDefault()
+    bring(front + step)
+  })
 
   document.addEventListener('astro:page-load', () => {
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
+    front = 0
     if (!journey || !scene) return
+    count = scene.querySelectorAll('.place').length
+    document.getElementById('scroller')?.addEventListener('scroll', request, { passive: true })
+    scene.addEventListener('scroll', request, { passive: true })
+    scene.addEventListener('scroll', settled, { passive: true })
 
     // Coming back during the same visit lands in the room; scrolling up still shows the entrance.
-    if (sessionStorage.getItem('sidelong-entered') && scrollY < 4) {
-      scrollTo({ top: stops(journey)[1], behavior: 'instant' })
+    if (sessionStorage.getItem('sidelong-entered') && scrolled() < 4) {
+      go(stops(journey)[1], 'instant')
     }
     measure()
 
-    document.getElementById('enter')?.addEventListener('click', () => scrollTo({ top: stops(journey)[1], behavior: calm.matches ? 'instant' : 'smooth' }))
+    document.getElementById('enter')?.addEventListener('click', () => go(stops(journey)[1], calm.matches ? 'instant' : 'smooth'))
 
     document.getElementById('home')?.addEventListener('click', (e) => {
       e.preventDefault()
-      scrollTo({ top: 0, behavior: calm.matches ? 'instant' : 'smooth' })
+      go(0, calm.matches ? 'instant' : 'smooth')
     })
 
     scene.querySelectorAll<HTMLElement>('.pager button').forEach((dot) => {
@@ -236,27 +272,46 @@ const places = site.places
 </script>
 
 <style>
-  /* Extra height to scroll through; the scene stays pinned while the scroll plays it.
-     One long stretch tilts the wall into the floor, then a shorter one per door turns the ring. */
+  /* Extra height to scroll through; the scene stays pinned while the scroll tilts the wall into
+     the floor. Turning the ring is sideways, on the scene itself. */
   .journey {
     --tilt-span: 140svh;
-    --step: 30svh; /* short, so one wheel flick or swipe carries to the next door */
     position: relative;
-    height: calc(100svh + var(--tilt-span) + var(--n) * var(--step));
+    height: calc(100svh + var(--tilt-span));
   }
 
-  /* The places the scroll comes to rest: the entrance, then each door at the front. The browser
+  /* The places the scroll comes to rest: the entrance, and inside the room. The browser
      carries the visitor's own momentum into whichever one they're heading for. */
   .rest {
     position: absolute;
     left: 0;
     height: 1px;
     scroll-snap-align: start;
-    scroll-snap-stop: always; /* one door per flick, never skipping past */
   }
 
   :global(html:has(.journey)) {
     scroll-snap-type: y mandatory;
+  }
+
+  /* On touch screens, scroll the journey inside a full-screen box instead of the page. Safari only
+     collapses its toolbar when the page itself scrolls, and that collapse resizes the viewport in
+     the middle of the swipe into the room, which stutters. In a box the viewport never changes. */
+  @media (hover: none) and (pointer: coarse) {
+    :global(html:has(.journey)),
+    :global(body:has(.journey)) {
+      height: 100%;
+      overflow: hidden;
+      scroll-snap-type: none;
+    }
+
+    .scroller {
+      position: fixed;
+      inset: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none; /* the room doesn't bounce away from the edges */
+      scroll-snap-type: y mandatory;
+    }
   }
 
   .scene {
@@ -281,8 +336,46 @@ const places = site.places
     top: 0;
     height: 100svh;
     min-height: 640px;
-    overflow: hidden;
     background: var(--ground);
+    /* The scene is also the sideways scroll that turns the ring, so a swipe that starts on a door
+       turns it too. Locked until you're inside; no bounce, and no swiping back a page on a trackpad. */
+    overflow: hidden;
+    overscroll-behavior-x: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .scene::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scene.is-in {
+    overflow-x: auto;
+  }
+
+  /* The stops the sideways scroll snaps to: one door per flick, never skipping past */
+  .track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: calc((var(--n) + 2) * 100%);
+    height: 1px;
+  }
+
+  .track span {
+    flex: 1;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Everything you see, pinned in place while the scene scrolls sideways beneath it */
+  .view {
+    position: sticky;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     perspective: 1100px;
     perspective-origin: 50% 40%;
   }
@@ -622,15 +715,16 @@ const places = site.places
     transform: translateX(calc(var(--off) * 60px));
   }
 
+  /* A row along the bottom, clear of the iPhone's home bar */
   .pager {
     position: absolute;
-    right: 22px;
-    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     opacity: clamp(0, calc((var(--p) - 0.8) * 5), 1);
     pointer-events: none;
-    transform: translateY(-50%);
   }
 
   .is-in .pager {
@@ -708,10 +802,6 @@ const places = site.places
 
     .hello h1 {
       font-size: 19px;
-    }
-
-    .pager {
-      right: 4px;
     }
   }
 
