@@ -12,7 +12,8 @@ const places = site.places
 <Base immersive>
   <div class="journey" id="journey" style={`--n: ${places.length}`}>
     <span class="rest" style="top: 0" aria-hidden="true"></span>
-    {places.map((_, i) => <span class="rest" style={`top: calc(var(--tilt-span) + ${i} * var(--step))`} aria-hidden="true" />)}
+    {/* One stop per door, plus one more where the ring has come full circle */}
+    {[...places, null].map((_, i) => <span class="rest" style={`top: calc(var(--tilt-span) + ${i} * var(--step))`} aria-hidden="true" />)}
 
     <div class="scene" id="scene">
       <div class="sky" aria-hidden="true"></div>
@@ -102,6 +103,7 @@ const places = site.places
 
   let turned = 0 // which door is at the front when there is no scrolling to say (reduced motion)
   let front = 0
+  let count = 1
 
   // Read the scroll into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
   // and --t, how far the ring has turned (0 for the first door, 1 for the second, and so on).
@@ -112,10 +114,11 @@ const places = site.places
     const scene = document.getElementById('scene')
     if (!journey || !scene) return
     const [top, room, next] = stops(journey)
-    const last = scene.querySelectorAll('.place').length - 1
+    count = scene.querySelectorAll('.place').length
     const p = calm.matches ? 1 : clamp((scrollY - top) / (room - top || 1))
-    const t = calm.matches ? turned : clamp((scrollY - room) / (next - room || 1), last)
-    front = Math.round(t)
+    // The ring can turn one full circle: at the last stop the first door is at the front again.
+    const t = calm.matches ? turned : clamp((scrollY - room) / (next - room || 1), count)
+    front = Math.round(t) % count
     scene.style.setProperty('--p', p.toFixed(4))
     scene.style.setProperty('--e', (p * p * (3 - 2 * p)).toFixed(4)) // eased, for the tilt
     scene.style.setProperty('--t', t.toFixed(4))
@@ -127,8 +130,44 @@ const places = site.places
     if (!queued) requestAnimationFrame(update)
     queued = true
   }
+
+  // Find where the mat's front edge lands on screen once you're in the room, so the line of
+  // text can sit a fixed distance below it on any screen. The room is posed for a moment
+  // (fully tilted, no lean) to take the reading, then put back before anything is painted.
+  const measure = () => {
+    const scene = document.getElementById('scene')
+    const edge = scene?.querySelector('.mat-side')
+    if (!scene || !edge) return
+    scene.classList.add('is-measuring')
+    scene.style.setProperty('--p', '1')
+    scene.style.setProperty('--e', '1')
+    scene.style.setProperty('--mx', '0.5')
+    const foot = edge.getBoundingClientRect().bottom - scene.getBoundingClientRect().top
+    scene.style.setProperty('--mat-foot', `${Math.round(foot)}px`)
+    scene.style.removeProperty('--mx')
+    scene.classList.remove('is-measuring')
+    update()
+  }
+
   addEventListener('scroll', request, { passive: true })
-  addEventListener('resize', request)
+  addEventListener('resize', measure)
+
+  // Going round again: the stop after the last door looks exactly like the first door's stop,
+  // so once the scroll settles there, hop back to the first without anything moving on screen.
+  let settle = 0
+  addEventListener(
+    'scroll',
+    () => {
+      clearTimeout(settle)
+      settle = window.setTimeout(() => {
+        const journey = document.getElementById('journey')
+        if (!journey || calm.matches) return
+        const all = stops(journey)
+        if (scrollY >= all[all.length - 1] - 2) scrollTo({ top: all[1], behavior: 'instant' })
+      }, 160)
+    },
+    { passive: true },
+  )
 
   // Bring a door to the front: scroll to its stop, or just turn the ring if motion is reduced.
   const bring = (i: number) => {
@@ -138,7 +177,11 @@ const places = site.places
       turned = i
       update()
     } else {
-      scrollTo({ top: stops(journey)[i + 1], behavior: 'smooth' })
+      // The first door can be reached two ways; take whichever stop is nearer.
+      const all = stops(journey)
+      const ways = i === 0 ? [all[1], all[all.length - 1]] : [all[i + 1]]
+      const top = ways.reduce((a, b) => (Math.abs(b - scrollY) < Math.abs(a - scrollY) ? b : a))
+      scrollTo({ top, behavior: 'smooth' })
     }
   }
 
@@ -151,9 +194,9 @@ const places = site.places
     if (sessionStorage.getItem('sidelong-entered') && scrollY < 4) {
       scrollTo({ top: stops(journey)[1], behavior: 'instant' })
     }
-    update()
+    measure()
 
-    document.getElementById('enter')?.addEventListener('click', () => bring(0))
+    document.getElementById('enter')?.addEventListener('click', () => scrollTo({ top: stops(journey)[1], behavior: calm.matches ? 'instant' : 'smooth' }))
 
     document.getElementById('home')?.addEventListener('click', (e) => {
       e.preventDefault()
@@ -199,7 +242,7 @@ const places = site.places
     --tilt-span: 140svh;
     --step: 30svh; /* short, so one wheel flick or swipe carries to the next door */
     position: relative;
-    height: calc(100svh + var(--tilt-span) + (var(--n) - 1) * var(--step));
+    height: calc(100svh + var(--tilt-span) + var(--n) * var(--step));
   }
 
   /* The places the scroll comes to rest: the entrance, then each door at the front. The browser
@@ -265,13 +308,17 @@ const places = site.places
     pointer-events: none; /* only the doors take clicks, wherever they sit in depth */
     transform-style: preserve-3d;
     transform-origin: 50% var(--horizon);
-    transform: translate3d(0, calc(var(--e) * 13vh), calc(var(--e) * 110px))
+    transform: translate3d(0, calc(var(--e) * 4vh), calc(var(--e) * 110px))
       rotateY(calc(var(--e) * (var(--mx, 0.5) - 0.5) * -5deg));
     transition: transform 0.25s ease-out;
   }
 
+  .is-measuring .world {
+    transition: none;
+  }
+
   .is-leaving .world {
-    transform: translate3d(0, 13vh, 460px);
+    transform: translate3d(0, 4vh, 460px);
     transition: transform 0.7s var(--ease);
   }
 
@@ -346,12 +393,13 @@ const places = site.places
     transform-style: preserve-3d; /* keep the doors in the floor's 3D space */
   }
 
-  /* Each door stands on a ring around the mat. --a is its angle round the ring: 0 is the front.
+  /* Each door stands on a ring on the mat. --off is how many places it is from the front, counted
+     the short way round, and --a is that as an angle: 0 is the front.
      As --t grows with the scroll, every door moves one place round.
      --show runs 0 to 1 as the door first rises; --front is 1 at the front and 0 at the back;
      --near is 1 only while this door is the one at the front. */
   .place {
-    --off: calc(var(--i) - var(--t));
+    --off: calc(mod(var(--i) - var(--t) + var(--n) * 1.5, var(--n)) - var(--n) / 2);
     --a: calc(var(--off) * 360deg / var(--n));
     --front: calc((cos(var(--a)) + 1) / 2);
     --near: clamp(0, calc(1 - max(var(--off), var(--off) * -1) * 2), 1);
@@ -547,19 +595,20 @@ const places = site.places
     transform: translateY(3px);
   }
 
-  /* The line about the door at the front. All the lines sit in one spot; only the nearest shows. */
+  /* The line about the door at the front. All the lines sit in one spot, a fixed distance below
+     the mat; only the nearest shows. */
   .captions {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 4.5vh;
+    top: calc(var(--mat-foot, 84%) + 24px); /* just below the mat's front edge */
     height: 28px;
     pointer-events: none;
     opacity: clamp(0, calc((var(--p) - 0.8) * 5), 1);
   }
 
   .caption {
-    --off: calc(var(--i) - var(--t));
+    --off: calc(mod(var(--i) - var(--t) + var(--n) * 1.5, var(--n)) - var(--n) / 2);
     --near: clamp(0, calc(1 - max(var(--off), var(--off) * -1) * 2), 1);
     position: absolute;
     inset: 0;
@@ -589,7 +638,7 @@ const places = site.places
   }
 
   .pager button {
-    --off: calc(var(--i) - var(--t));
+    --off: calc(mod(var(--i) - var(--t) + var(--n) * 1.5, var(--n)) - var(--n) / 2);
     --near: clamp(0, calc(1 - max(var(--off), var(--off) * -1)), 1);
     display: grid;
     place-items: center;
