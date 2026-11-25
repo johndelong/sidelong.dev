@@ -129,6 +129,17 @@ const places = site.places
   let inside: boolean | null = null // fully in the room (null until the first reading)
   let kept = -1 // the door last noted for the visit, so coming back lands on it
 
+  // Where you land depends on how you arrived. Back from a door's page: in the room, on that door.
+  // A reload: wherever you were, splash or room. Anything else (a new tab, a typed address, a link
+  // from elsewhere): the splash. How this document was loaded, and where you last were, are read
+  // here, before anything on the page can change them.
+  const loaded = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+  const loadedHome = !loaded || (new URL(loaded.name).pathname.replace(/\/$/, '') || '/') === '/'
+  const reloaded = loaded?.type === 'reload' || loaded?.type === 'back_forward'
+  const wasAt = sessionStorage.getItem('sidelong-at')
+  let firstVisit = true
+  history.scrollRestoration = 'manual' // the page is put where it belongs here, not by the browser
+
   // Read both scrolls into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
   // and --t, how far the ring has turned (0 for the first door, 1 for the second, and so on).
   //
@@ -183,6 +194,7 @@ const places = site.places
       // Until you're in, the room can't be reached with the keyboard either
       for (const part of scene.querySelectorAll<HTMLElement>('.places, .pager, .top')) part.inert = !inside
       if (inside) sessionStorage.setItem('sidelong-entered', '1')
+      sessionStorage.setItem('sidelong-at', inside ? 'room' : 'splash')
     }
     if (inside && front !== kept) {
       kept = front
@@ -266,17 +278,18 @@ const places = site.places
     kept = -1
     if (!journey || !scene) return
     count = scene.querySelectorAll('.place').length
-    // Coming back during the same visit, the door you last had at the front is there again
-    const back = sessionStorage.getItem('sidelong-entered')
-    front = back ? wrap(Number(sessionStorage.getItem('sidelong-door')) || 0, count) : 0
+    const fromLoad = firstVisit && loadedHome // this page load, not a move from another page
+    firstVisit = false
+    const room = fromLoad ? reloaded && wasAt === 'room' : !!sessionStorage.getItem('sidelong-entered')
+    // In the room, the door you last had at the front is there again
+    front = room ? wrap(Number(sessionStorage.getItem('sidelong-door')) || 0, count) : 0
     document.getElementById('scroller')?.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', settled, { passive: true })
 
-    // Coming back during the same visit lands in the room; scrolling up still shows the entrance.
-    if (back && scrolled() < 4) {
-      go(stops(journey)[1], 'instant')
-    }
+    // Scrolling up from the room still shows the entrance
+    if (fromLoad) go(room ? stops(journey)[1] : 0, 'instant')
+    else if (room && scrolled() < 4) go(stops(journey)[1], 'instant')
     measure()
 
     // Arriving back from a door's page under its colour panel: shrink it back into that door
