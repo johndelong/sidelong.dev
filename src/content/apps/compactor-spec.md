@@ -9,20 +9,24 @@ chips:
   - For businesses
   - Web app
   - 3D
+screenshot: /apps/compactor-spec/placement.webp
+screenshotAlt: "Compactor Spec: a blue self-contained compactor with a walk-on deck at a warehouse loading dock in 3D, beside the question of where its power unit should go."
 link:
   label: Visit compactorspec.com
   href: https://compactorspec.com
 features:
   - title: Start from your building
-    body: The first question is where it's going, at a loading dock, through an exterior wall or beside a door, so only equipment that works there is offered.
-  - title: Build it, or get help choosing
-    body: Pick equipment yourself and add compatible options, or answer one practical question at a time and get a recommendation.
+    body: The first question is where it's going, at a loading dock, through an exterior wall or beside a door, so only equipment that works there is offered. From there, pick the equipment yourself, or answer one practical question at a time and get a recommendation.
+    screenshot: /apps/compactor-spec/start.webp
+    alt: "Compactor Spec's start screen, offering Build it myself or Help me choose, beside a 3D model of a warehouse with loading docks."
   - title: See it installed
     body: Every choice shows up on a 3D model of the building, so you can see what you'd get and how it would sit at your site before anyone visits.
+    screenshot: /apps/compactor-spec/ready.webp
+    alt: "A configured compactor shown in 3D at a warehouse loading dock, with the message that the assembly is ready."
   - title: A build sheet and a quote
     body: The finished configuration becomes a build sheet, ready to send to a local installer for a quote.
-  - title: An admin portal behind it
-    body: The installer sees analytics, quote requests and help inquiries in one place, and can configure the whole configurator, down to the 3D models and where they're placed.
+    screenshot: /apps/compactor-spec/sheet.webp
+    alt: "A Compactor Spec concept build sheet with isometric, front and back drawings of the configured compactor."
 ---
 
 Buying an industrial trash compactor usually means phone calls, still photos, data sheets and brochures. For a customer who knows nothing about compactors, that's confusing. They have to work out what they need from a pile of model numbers, without any real picture of what will end up behind their building.
