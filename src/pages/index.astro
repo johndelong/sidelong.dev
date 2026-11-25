@@ -34,28 +34,29 @@ const places = site.places
             {Array.from({ length: 8 }, (_, k) => <span class="mat-side" style={`--k: ${k}`} />)}
             <span class="mat-top"></span>
           </div>
-
-          <nav class="places" id="places" aria-label="Places">
-            {
-              places.map((place, i) => {
-                const Door = place.href ? 'a' : 'span'
-                return (
-                  <div class="place" style={`--c: linear-gradient(135deg, ${place.colors}); --i: ${i}`}>
-                    <span class="pool" aria-hidden="true" />
-                    <span class="shade" aria-hidden="true" />
-                    <Door class:list={['door', { closed: !place.href, ink: place.ink }]} href={place.href || undefined} data-i={i}>
-                      <span class="stand">
-                        <span class="slab">
-                          <span class="name">{place.label}</span>
-                        </span>
-                      </span>
-                    </Door>
-                  </div>
-                )
-              })
-            }
-          </nav>
         </div>
+
+        {/* The doors stand beside the floor rather than in it (see .places in the styles) */}
+        <nav class="places" id="places" aria-label="Places">
+          {
+            places.map((place, i) => {
+              const Door = place.href ? 'a' : 'span'
+              return (
+                <div class="place" style={`--c: linear-gradient(135deg, ${place.colors}); --i: ${i}`}>
+                  <span class="pool" aria-hidden="true" />
+                  <span class="shade" aria-hidden="true" />
+                  <Door class:list={['door', { closed: !place.href, ink: place.ink }]} href={place.href || undefined} data-i={i}>
+                    <span class="stand">
+                      <span class="slab">
+                        <span class="name">{place.label}</span>
+                      </span>
+                    </span>
+                  </Door>
+                </div>
+              )
+            })
+          }
+        </nav>
       </div>
 
       <div class="intro">
@@ -487,14 +488,19 @@ const places = site.places
       rotate 0.7s var(--ease);
   }
 
-  /* The ground: flat like a wall at first, then tilted away into a floor */
-  .ground {
+  /* The floor and the ring of doors beside it share one pivot: the horizon, in the middle */
+  .ground,
+  .places {
     position: absolute;
     left: 50%;
     top: var(--horizon);
     width: 0;
     height: 0;
     transform-style: preserve-3d;
+  }
+
+  /* The ground: flat like a wall at first, then tilted away into a floor */
+  .ground {
     transform: rotateX(var(--tilt));
   }
 
@@ -554,28 +560,41 @@ const places = site.places
     transition: background-position 0.6s var(--ease);
   }
 
+  /* The doors stand beside the floor in the room, not inside it. Placed inside the tilted floor,
+     they'd have to be rotated back upright, and Safari sometimes drops that rotation for a frame
+     while the room leans, so the doors flicker between standing and lying flat. Here each one is
+     upright as it is, and is placed where the floor would put it. The floor's two directions,
+     once tilted: --across (away from you along it) and --up (off it), each as a step in y and z. */
   .places {
-    transform-style: preserve-3d; /* keep the doors in the floor's 3D space */
+    --across-y: cos(var(--tilt));
+    --across-z: sin(var(--tilt));
+    --up-y: calc(sin(var(--tilt)) * -1);
+    --up-z: cos(var(--tilt));
   }
 
   /* Each door stands on a ring on the mat. --off is how many places it is from the front, counted
      the short way round, and --a is that as an angle: 0 is the front.
      As --t grows with the scroll, every door moves one place round.
      --show runs 0 to 1 as the door first rises; --front is 1 at the front and 0 at the back;
-     --near is 1 only while this door is the one at the front. */
+     --near is 1 only while this door is the one at the front.
+     The door's spot is --fy across the floor and --fz up off it, onto the mat's top face. */
   .place {
     --off: calc(mod(var(--i) - var(--t) + var(--n) * 1.5, var(--n)) - var(--n) / 2);
     --a: calc(var(--off) * 360deg / var(--n));
     --front: calc((cos(var(--a)) + 1) / 2);
     --near: clamp(0, calc(1 - max(var(--off), var(--off) * -1) * 2), 1);
     --show: clamp(0, calc((var(--p) - 0.5 - var(--i) * 0.05) * 5), 1);
+    --fy: calc((var(--mat-h) / 2 - cos(var(--a)) * var(--ry)) * -1);
+    --fz: var(--mat-up);
     position: absolute;
-    left: calc(sin(var(--a)) * var(--rx));
-    top: calc((var(--mat-h) / 2 - cos(var(--a)) * var(--ry)) * -1);
     width: 0;
     height: 0;
     transform-style: preserve-3d;
-    transform: translateZ(var(--mat-up)); /* up onto the mat's top face */
+    transform: translate3d(
+      calc(sin(var(--a)) * var(--rx)),
+      calc(var(--fy) * var(--across-y) + var(--fz) * var(--up-y)),
+      calc(var(--fy) * var(--across-z) + var(--fz) * var(--up-z))
+    );
   }
 
   /* The front door's colour, as light on the mat beneath it */
@@ -596,7 +615,7 @@ const places = site.places
   .shade {
     position: absolute;
     left: calc(var(--door-w) * -0.55);
-    top: -16px;
+    top: -20px;
     width: calc(var(--door-w) * 1.1);
     height: 40px;
     border-radius: 50%;
@@ -606,6 +625,12 @@ const places = site.places
     pointer-events: none;
   }
 
+  /* Both are centred on the door's foot, and laid flat on the floor there */
+  .pool,
+  .shade {
+    transform: rotateX(var(--tilt));
+  }
+
   .door {
     position: absolute;
     left: 0;
@@ -613,8 +638,8 @@ const places = site.places
     color: var(--ink);
     text-decoration: none;
     cursor: pointer;
-    transform: translateZ(calc(var(--e) * var(--hover))) translateX(-50%) rotateX(calc(var(--tilt) * -1));
-    transform-origin: 50% 100%;
+    /* Floating --hover up off the floor */
+    transform: translate3d(-50%, calc(var(--e) * var(--hover) * var(--up-y)), calc(var(--e) * var(--hover) * var(--up-z)));
   }
 
   .is-in .door {
