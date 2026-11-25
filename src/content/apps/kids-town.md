@@ -1,6 +1,6 @@
 ---
 name: Kids Town
-order: 6
+order: 7
 gradient: '#FFD166, #FF8E53'
 glyph: '<path d="M7 38V25l8-8 8 8v13zM27 38V20l7-7 7 7v18z"/>'
 summary: Pretend-play apps for kids, starting with a library and a bank, that work the way the real ones do.
@@ -22,8 +22,12 @@ features:
     body: Personal accounts with deposits, withdrawals, payees and memos, a transaction history, low-balance alerts, and printable debit cards with QR codes.
 ---
 
-[How Kids Town started: what the kids were playing, and why a real app made it better.]
+Kids Town started with my girls' library. They'd set one up on their own: a cash register at the front desk, a pile of books, and a library card made out to me. They wanted me to check out a book. That was the moment I thought, let's make this more real.
 
-[What you learned building software for small hands.]
+It grew from there into a whole town built around buying, selling and managing money. My wife played something similar as a kid, which she called "Money Town." It seemed like a fun way to teach kids about money and debit cards while leaning into their creativity and imaginary play. The money is all pretend, and you decide how much everyone starts with.
 
-[Which building in town comes next.]
+The kids take turns playing different roles, or each sticks with one role at a different shop, like one running the library while the other works the grocery register.
+
+Building it taught me something about my own habits. As an engineer, I love building in options. For kids, options kill the vibe: they get lost in a sea of them, and they just want to play. So everything has big buttons and very few actions, and the goal is to get them playing quickly, not to spend twenty minutes on setup.
+
+It's been a while since they've picked it up. To bring the excitement back, I'm thinking about 3D printing credit cards with NFC chips inside, so they have something real to hold and tap.

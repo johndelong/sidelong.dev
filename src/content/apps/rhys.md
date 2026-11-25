@@ -1,6 +1,6 @@
 ---
 name: Rhys
-order: 3
+order: 4
 summary: Our household assistant. One brain that knows our home, and as many ways to talk to it as we need, built to keep our family's information at home.
 tagline: A household assistant any family could name. Ours is Rhys.
 gradient: '#7FD1C1, #3B7DD8'

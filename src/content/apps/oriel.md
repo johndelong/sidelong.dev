@@ -1,6 +1,6 @@
 ---
 name: Oriel
-order: 2
+order: 3
 gradient: '#FFB347, #FF6B5E'
 glyph: '<path d="M12 33V16l5-5h14l5 5v17zM20 11v22M28 11v22M12 33l6 6h12l6-6"/>'
 summary: A window into our house, hanging on the wall like a picture frame. The family calendar, the kids' chores and the home itself, all in one place.

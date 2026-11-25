@@ -1,6 +1,6 @@
 ---
 name: RF MQTT Discovery
-order: 8
+order: 9
 gradient: '#9B6BFF, #4BA3F5'
 glyph: '<circle cx="14" cy="34" r="2.5"/><path d="M14 23a11 11 0 0 1 11 11M14 12a22 22 0 0 1 22 22"/>'
 summary: A Home Assistant app that turns the 433 MHz sensors around the house into Home Assistant devices, but only the ones you approve.
