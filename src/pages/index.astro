@@ -91,8 +91,6 @@ const places = site.places
         }
       </div>
 
-      <div class="flood" aria-hidden="true"></div>
-
       <div class="top"><Header id="home" /></div>
       </div>
     </div>
@@ -102,6 +100,7 @@ const places = site.places
 
 <script>
   import { navigate } from 'astro:transitions/client'
+  import { covering, grow, reveal, shrinkInto } from '../scripts/veil'
 
   const calm = matchMedia('(prefers-reduced-motion: reduce)')
   const clamp = (n: number, max = 1) => Math.min(max, Math.max(0, n))
@@ -280,6 +279,13 @@ const places = site.places
     }
     measure()
 
+    // Arriving back from a door's page under its colour panel: shrink it back into that door
+    if (covering()) {
+      const slab = inside ? scene.querySelector<HTMLElement>(`.door[data-i="${front}"] .slab`) : null
+      if (slab) shrinkInto(slab)
+      else reveal()
+    }
+
     document.getElementById('enter')?.addEventListener('click', () => go(stops(journey)[1], calm.matches ? 'instant' : 'smooth'))
 
     document.getElementById('home')?.addEventListener('click', (e) => {
@@ -307,13 +313,12 @@ const places = site.places
           bring(i)
           return
         }
-        // Walking through the front door: move toward it, let its colour fill the view, then go.
+        // Walking through the front door: move toward it while it grows to fill the screen, then go.
         if (!(door instanceof HTMLAnchorElement)) return
         if (calm.matches || e.metaKey || e.ctrlKey || e.shiftKey) return
         e.preventDefault()
-        scene.style.setProperty('--flood', getComputedStyle(door.parentElement!).getPropertyValue('--c'))
         scene.classList.add('is-leaving')
-        setTimeout(() => navigate(door.href), 520)
+        grow(door.querySelector<HTMLElement>('.slab')!).then(() => navigate(door.href))
       })
     })
   })
@@ -820,19 +825,6 @@ const places = site.places
 
   .is-in .top {
     pointer-events: auto;
-  }
-
-  .flood {
-    position: absolute;
-    inset: 0;
-    background: var(--flood, transparent);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-
-  .is-leaving .flood {
-    opacity: 1;
   }
 
   /* Phones: the same room, sized down. One door fits at the front, with its neighbours
