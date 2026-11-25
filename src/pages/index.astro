@@ -130,14 +130,46 @@ const places = site.places
 
   // Read both scrolls into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
   // and --t, how far the ring has turned (0 for the first door, 1 for the second, and so on).
+  //
+  // The tilt eases toward where the scroll says it should be rather than jumping with it. A slow
+  // drag still tracks the finger, but a flick, a snap, or the Come in button (all of which cover
+  // the distance in about half a second) can't whip the room round faster than the eye can follow.
+  // It moves like a critically damped spring: it starts from rest, gathers speed, and settles
+  // without overshooting.
+  const stiffness = 5.5 // a full tilt takes about 1.2s to settle
+  let shown = 0 // the tilt on screen
+  let speed = 0 // and how fast it's moving
+  let jump = true // land on the scroll's tilt directly: on page load, and with reduced motion
+  let last = 0
   let queued = false
-  const update = () => {
+  const update = (now = performance.now()) => {
     queued = false
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
     if (!journey || !scene) return
     const [top, room] = stops(journey)
-    const p = calm.matches ? 1 : clamp((scrolled() - top) / (room - top || 1))
+    const target = calm.matches ? 1 : clamp((scrolled() - top) / (room - top || 1))
+    const dt = Math.min(1 / 30, (now - last) / 1000)
+    last = now
+    if (jump) {
+      shown = target
+      speed = 0
+    } else {
+      // One exact step of the spring toward the target
+      const off = shown - target
+      const pull = (speed + stiffness * off) * dt
+      const decay = Math.exp(-stiffness * dt)
+      shown = target + (off + pull) * decay
+      speed = (speed - stiffness * pull) * decay
+    }
+    jump = false
+    if (Math.abs(target - shown) < 0.001 && Math.abs(speed) < 0.01) {
+      shown = target
+      speed = 0
+    } else {
+      request() // keep moving on the next frame
+    }
+    const p = shown
     const t = turnedTo(scene)
     front = wrap(Math.round(t), count)
     scene.style.setProperty('--p', p.toFixed(4))
@@ -220,6 +252,7 @@ const places = site.places
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
     front = 0
+    jump = true
     if (!journey || !scene) return
     count = scene.querySelectorAll('.place').length
     document.getElementById('scroller')?.addEventListener('scroll', request, { passive: true })
