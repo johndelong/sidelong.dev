@@ -791,3 +791,13 @@ dialog.zoom.is-open .zoom-close {
     transition: none;
   }
 }
+
+/* The colour panel that carries you through a door and back (scripts/veil.ts) */
+.veil {
+  position: fixed;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
