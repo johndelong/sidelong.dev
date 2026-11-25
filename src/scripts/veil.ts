@@ -69,7 +69,9 @@ function label(slab: HTMLElement, panel: HTMLElement) {
   if (!name) return null
   const copy = name.cloneNode(true) as HTMLElement
   copy.style.color = getComputedStyle(name).color
-  copy.style.transform = `scale(${slab.getBoundingClientRect().height / (slab.offsetHeight || 1)})`
+  // Sized with `scale` rather than `transform`, which holds the name's counter-slant against the
+  // card's; replacing it would slant the name twice
+  copy.style.scale = String(slab.getBoundingClientRect().height / (slab.offsetHeight || 1))
   panel.append(copy)
   return copy
 }
