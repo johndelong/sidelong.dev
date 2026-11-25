@@ -127,6 +127,8 @@ const places = site.places
 
   let front = 0
   let count = 1
+  let inside: boolean | null = null // fully in the room (null until the first reading)
+  let kept = -1 // the door last noted for the visit, so coming back lands on it
 
   // Read both scrolls into two numbers: --p, how far the wall has tilted into a floor (0 to 1),
   // and --t, how far the ring has turned (0 for the first door, 1 for the second, and so on).
@@ -176,8 +178,17 @@ const places = site.places
     scene.style.setProperty('--e', (p * p * (3 - 2 * p)).toFixed(4)) // eased, for the tilt
     scene.style.setProperty('--t', t.toFixed(4))
     scene.classList.toggle('is-mid', p > 0.3)
-    scene.classList.toggle('is-in', p > 0.92)
-    if (p > 0.92) sessionStorage.setItem('sidelong-entered', '1')
+    if (p > 0.92 !== inside) {
+      inside = p > 0.92
+      scene.classList.toggle('is-in', inside)
+      // Until you're in, the room can't be reached with the keyboard either
+      for (const part of scene.querySelectorAll<HTMLElement>('.places, .pager, .top')) part.inert = !inside
+      if (inside) sessionStorage.setItem('sidelong-entered', '1')
+    }
+    if (inside && front !== kept) {
+      kept = front
+      sessionStorage.setItem('sidelong-door', String(front))
+    }
   }
   const request = () => {
     if (!queued) requestAnimationFrame(update)
@@ -251,16 +262,20 @@ const places = site.places
   document.addEventListener('astro:page-load', () => {
     const journey = document.getElementById('journey')
     const scene = document.getElementById('scene')
-    front = 0
     jump = true
+    inside = null
+    kept = -1
     if (!journey || !scene) return
     count = scene.querySelectorAll('.place').length
+    // Coming back during the same visit, the door you last had at the front is there again
+    const back = sessionStorage.getItem('sidelong-entered')
+    front = back ? wrap(Number(sessionStorage.getItem('sidelong-door')) || 0, count) : 0
     document.getElementById('scroller')?.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', settled, { passive: true })
 
     // Coming back during the same visit lands in the room; scrolling up still shows the entrance.
-    if (sessionStorage.getItem('sidelong-entered') && scrolled() < 4) {
+    if (back && scrolled() < 4) {
       go(stops(journey)[1], 'instant')
     }
     measure()
@@ -434,9 +449,11 @@ const places = site.places
     pointer-events: none; /* only the doors take clicks, wherever they sit in depth */
     transform-style: preserve-3d;
     transform-origin: 50% var(--horizon);
-    transform: translate3d(0, calc(var(--e) * 4vh), calc(var(--e) * 110px))
-      rotateY(calc(var(--e) * (var(--mx, 0.5) - 0.5) * -5deg));
-    transition: transform 0.25s ease-out;
+    /* The move in and the lean are separate properties so only the lean is eased here: the move
+       in already eases in the script, and easing it twice left the camera trailing the floor. */
+    translate: 0 calc(var(--e) * 4vh) calc(var(--e) * 110px);
+    rotate: y calc(var(--e) * (var(--mx, 0.5) - 0.5) * -5deg);
+    transition: rotate 0.25s ease-out;
   }
 
   .is-measuring .world {
@@ -444,8 +461,11 @@ const places = site.places
   }
 
   .is-leaving .world {
-    transform: translate3d(0, 4vh, 460px);
-    transition: transform 0.7s var(--ease);
+    translate: 0 4vh 460px;
+    rotate: y 0deg;
+    transition:
+      translate 0.7s var(--ease),
+      rotate 0.7s var(--ease);
   }
 
   /* The ground: flat like a wall at first, then tilted away into a floor */
@@ -748,7 +768,7 @@ const places = site.places
     transform: translateX(calc(var(--off) * 60px));
   }
 
-  /* A row along the bottom, clear of the iPhone's home bar */
+  /* A row along the bottom of the room */
   .pager {
     position: absolute;
     left: 0;
@@ -838,7 +858,30 @@ const places = site.places
     }
   }
 
-  /* Reduced motion: no scroll-through; you start in the room, and doors turn the ring when tapped */
+  /* A phone held sideways: too short for the room at phone size, so it's lower and shallower,
+     with the horizon raised so the line under the mat and the dots still fit on screen */
+  @media (max-width: 940px) and (max-height: 500px) {
+    .scene {
+      --horizon: 62%;
+      --mat-h: 120px;
+      --door-w: 110px;
+      --door-h: 140px;
+      --rx: 230px;
+      --ry: 75px;
+      min-height: 0;
+    }
+
+    .name {
+      font-size: 17px;
+    }
+
+    .pager {
+      bottom: 6px;
+    }
+  }
+
+  /* Reduced motion: no scroll-through; you start in the room. Swiping still turns the ring, but
+     the dots, arrow keys and side doors jump it straight to a door */
   @media (prefers-reduced-motion: reduce) {
     .journey {
       height: auto;
