@@ -328,8 +328,9 @@ const places = site.places
     height: calc(100svh + var(--tilt-span));
   }
 
-  /* The places the scroll comes to rest: the entrance, and inside the room. The browser
-     carries the visitor's own momentum into whichever one they're heading for. */
+  /* The entrance and inside the room, the two ends of the scroll. The scroll only settles onto
+     one when it stops close by ("proximity"): a slow drag can rest anywhere in between, while a
+     flick's momentum, or Come in, carries all the way to the end. */
   .rest {
     position: absolute;
     left: 0;
@@ -338,7 +339,7 @@ const places = site.places
   }
 
   :global(html:has(.journey)) {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
   }
 
   /* On touch screens, scroll the journey inside a full-screen box instead of the page. Safari only
@@ -358,7 +359,7 @@ const places = site.places
       overflow-x: hidden;
       overflow-y: auto;
       overscroll-behavior: none; /* the room doesn't bounce away from the edges */
-      scroll-snap-type: y mandatory;
+      scroll-snap-type: y proximity;
     }
   }
 
