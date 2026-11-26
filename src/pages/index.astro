@@ -42,13 +42,14 @@ const places = site.places
             places.map((place, i) => {
               const Door = place.href ? 'a' : 'span'
               return (
-                <div class="place" style={`--c: linear-gradient(135deg, ${place.colors}); --i: ${i}`}>
+                <div class:list={['place', { closed: !place.href }]} style={`--c: linear-gradient(135deg, ${place.colors}); --i: ${i}`}>
                   <span class="pool" aria-hidden="true" />
                   <span class="shade" aria-hidden="true" />
                   <Door class:list={['door', { closed: !place.href, ink: place.ink }]} href={place.href || undefined} data-i={i}>
                     <span class="stand">
                       <span class="slab">
                         <span class="name">{place.label}</span>
+                        {!place.href && <span class="soon">Coming soon</span>}
                       </span>
                     </span>
                   </Door>
@@ -70,16 +71,8 @@ const places = site.places
         </div>
       </div>
 
-      <!-- What the door at the front is, in words -->
-      <div class="captions" aria-live="polite">
-        {
-          places.map((place, i) => (
-            <p class="caption" style={`--i: ${i}`}>
-              {place.blurb}
-            </p>
-          ))
-        }
-      </div>
+      <!-- Tells screen readers which door has come round to the front -->
+      <p class="sr-only" id="front-door" aria-live="polite"></p>
 
       <!-- One dot per door: where you are in the ring, and a way to jump -->
       <div class="pager">
@@ -126,6 +119,7 @@ const places = site.places
     scene.scrollTo({ left: stop * scene.clientWidth, behavior })
 
   let front = 0
+  let marked = -1 // the door last marked as the front one
   let count = 1
   let inside: boolean | null = null // fully in the room (null until the first reading)
   let kept = -1 // the door last noted for the visit, so coming back lands on it
@@ -194,8 +188,26 @@ const places = site.places
       scene.classList.toggle('is-in', inside)
       // Until you're in, the room can't be reached with the keyboard either
       for (const part of scene.querySelectorAll<HTMLElement>('.places, .pager, .top')) part.inert = !inside
-      if (inside) sessionStorage.setItem('sidelong-entered', '1')
+      if (inside) {
+        sessionStorage.setItem('sidelong-entered', '1')
+        marked = -1 // so the door at the front is announced on the way in
+      }
       sessionStorage.setItem('sidelong-at', inside ? 'room' : 'splash')
+    }
+    // Mark the front door, and say which it is for screen readers
+    if (front !== marked) {
+      marked = front
+      let label = ''
+      for (const door of scene.querySelectorAll<HTMLElement>('.door')) {
+        const isFront = Number(door.dataset.i) === front
+        door.classList.toggle('is-front', isFront)
+        if (isFront) {
+          const name = door.querySelector('.name')?.textContent ?? ''
+          label = door.classList.contains('closed') ? `${name}, coming soon` : name
+        }
+      }
+      const say = document.getElementById('front-door')
+      if (say && inside) say.textContent = label
     }
     if (inside && front !== kept) {
       kept = front
@@ -207,24 +219,11 @@ const places = site.places
     queued = true
   }
 
-  // Find where the mat's front edge lands on screen once you're in the room, so the line of
-  // text can sit a fixed distance below it on any screen. The room is posed for a moment
-  // (fully tilted, no lean) to take the reading, then put back before anything is painted.
-  // The sideways scroll is put back on the door that was at the front, at the new width.
-  const measure = () => {
-    const journey = document.getElementById('journey')
+  // After a resize, put the sideways scroll back on the door that was at the front, at the new width.
+  const recentre = () => {
     const scene = document.getElementById('scene')
-    const edge = scene?.querySelector('.mat-side')
-    if (!journey || !scene || !edge) return
+    if (!scene) return
     turn(scene, front + 1, 'instant')
-    scene.classList.add('is-measuring')
-    scene.style.setProperty('--p', '1')
-    scene.style.setProperty('--e', '1')
-    scene.style.setProperty('--mx', '0.5')
-    const foot = edge.getBoundingClientRect().bottom - scene.getBoundingClientRect().top
-    scene.style.setProperty('--mat-foot', `${Math.round(foot)}px`)
-    scene.style.removeProperty('--mx')
-    scene.classList.remove('is-measuring')
     update()
   }
 
@@ -232,7 +231,7 @@ const places = site.places
   // listeners (added on page load, as they're new on every visit).
   addEventListener('scroll', request, { passive: true })
 
-  addEventListener('resize', measure)
+  addEventListener('resize', recentre)
 
   // Going round: the stops at either end look exactly like the door at the other end, so once the
   // ring settles on one, hop to its twin without anything moving on screen.
@@ -291,7 +290,7 @@ const places = site.places
     // Scrolling up from the room still shows the entrance
     if (fromLoad) go(room ? stops(journey)[1] : 0, 'instant')
     else if (room && scrolled() < 4) go(stops(journey)[1], 'instant')
-    measure()
+    recentre()
 
     // Arriving back from a door's page under its colour panel: shrink it back into that door
     if (covering()) {
@@ -474,10 +473,6 @@ const places = site.places
     translate: 0 calc(var(--e) * 4vh) calc(var(--e) * 110px);
     rotate: y calc(var(--e) * (var(--mx, 0.5) - 0.5) * -5deg);
     transition: rotate 0.25s ease-out;
-  }
-
-  .is-measuring .world {
-    transition: none;
   }
 
   .is-leaving .world {
@@ -721,6 +716,61 @@ const places = site.places
     transform: skewX(var(--angle));
   }
 
+  /* A door that isn't open yet is an empty doorway: its colour moves to a thin outline and its
+     name, around a face the colour of the room. It casts only a faint light on the mat. */
+  .place.closed .slab {
+    box-sizing: border-box; /* the outline sits inside, so every door is the same size */
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--ground), var(--ground)) padding-box,
+      var(--c) border-box;
+    box-shadow: none;
+  }
+
+  .place.closed .name {
+    background-image: var(--c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* At the front, a closed door has nowhere to go: no pointer, no lift, no light */
+  .door.closed.is-front {
+    cursor: default;
+  }
+
+  .door.closed.is-front:hover .slab {
+    transform: skewX(calc(var(--angle) * -1));
+  }
+
+  .door.closed.is-front:hover .slab::after {
+    opacity: 0;
+  }
+
+  .place.closed .pool {
+    opacity: calc(var(--show) * var(--near) * 0.2);
+  }
+
+  /* A door that isn't open yet wears a ribbon across its top corner */
+  .soon {
+    position: absolute;
+    top: 26px;
+    right: -46px;
+    z-index: 1;
+    width: 180px;
+    padding: 7px 0;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    color: #1f1a24;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    transform: rotate(38deg);
+  }
+
   /* The entrance: wordmark on the plane, a greeting and one button. Fades as you scroll. */
   .intro {
     position: absolute;
@@ -783,33 +833,6 @@ const places = site.places
 
   .hello .button:hover {
     transform: translateY(3px);
-  }
-
-  /* The line about the door at the front. All the lines sit in one spot, a fixed distance below
-     the mat; only the nearest shows. */
-  .captions {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(var(--mat-foot, 84%) + 24px); /* just below the mat's front edge */
-    height: 28px;
-    pointer-events: none;
-    opacity: clamp(0, calc((var(--p) - 0.8) * 5), 1);
-  }
-
-  .caption {
-    --off: calc(mod(var(--i) - var(--t) + var(--n) * 1.5, var(--n)) - var(--n) / 2);
-    --near: clamp(0, calc(1 - max(var(--off), var(--off) * -1) * 2), 1);
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    padding: 0 24px;
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--ink-2);
-    text-align: center;
-    opacity: var(--near);
-    transform: translateX(calc(var(--off) * 60px));
   }
 
   /* A row along the bottom of the room */

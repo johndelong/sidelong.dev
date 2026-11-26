@@ -41,7 +41,7 @@ const goalColors = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)']
   </section>
 
   <section class="wrap" style="padding-bottom: 136px">
-    <Stage tall><Shot src={screenshot} alt={screenshotAlt} label={`${name} screenshot`} /></Stage>
+    <Stage tall phone={screenshot?.includes('-phone.')}><Shot src={screenshot} alt={screenshotAlt} label={`${name} screenshot`} /></Stage>
   </section>
 
   <section id="story" class="wrap section">

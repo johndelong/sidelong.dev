@@ -3,22 +3,27 @@ name: Connector
 order: 5
 gradient: '#FF7EB3, #8A5CF6'
 glyph: '<circle cx="14" cy="34" r="5"/><circle cx="34" cy="14" r="5"/><path d="M18 30L30 18"/>'
-summary: A cocktail recipe app for iPhone, with every drink drawn in its proper glass, with its ice and garnish.
-tagline: Cocktail recipes you can see, each one drawn in the right glass with the right ice and garnish.
+icon: /apps/connector/icon.png
+summary: A cocktail recipe app for iPhone, with every drink drawn in its proper glass, ingredient by ingredient.
+tagline: Cocktail recipes you can see, each one poured into the right glass, layer by layer.
 chips:
   - For home bartenders
   - iPhone
   - SwiftUI
+screenshot: /apps/connector/hero-phone.webp
+screenshotAlt: "An iPhone showing Connector's Angel Face, drawn in a coupe glass, with its gin, apricot brandy and Calvados listed below."
 link:
   label: View on the App Store
   href: https://apps.apple.com/us/app/connector-cocktail-recipes/id6743655861
 features:
   - title: The drink, drawn
-    body: Every recipe is shown as the drink itself, poured into its glass in layers, so you can see each ingredient's share at a glance, whether it's in a rocks glass, coupe, Nick & Nora, highball or martini glass.
-  - title: Ice and garnish
-    body: Block, crushed or regular ice, and an olive, strawberry, flower, or lime or lemon wedge, each drawn as its own layer so any drink can be put together.
-  - title: Vector glassware
-    body: Each glass is designed in Figma and split into glass, brim, shine and liquid layers, so the liquid can take any drink's colour and stays sharp at any size.
+    body: Every recipe is shown as the drink itself, poured into its glass in layers, so you can see each ingredient's share at a glance. Step through the layers to see one ingredient at a time. Each glass is designed in Figma as vector layers, so it stays sharp at any size and the liquid can take any drink's colour.
+    screenshot: /apps/connector/layers-phones.webp
+    alt: "An iPhone showing one layer of an Angel Face highlighted in its coupe glass: 1 oz of apricot brandy, with a slider to step through the other ingredients."
+  - title: Classics, or your own
+    body: Browse classic cocktails, each drawn in its glass, or build your own recipe, picking the glass, colour and ingredients and watching the preview as you go.
+    screenshot: /apps/connector/recipes-phones.webp
+    alt: "Two iPhones showing Connector's Discover list of classic cocktails and the editor for building your own recipe."
 ---
 
 Connector started as a napkin idea on a work trip to Jacksonville, Florida. Pete, Ryan and I worked together at Michigan Software Labs, and we were trading app ideas when we landed on one that sounded like a blast: a cocktail recipe app that felt fancy, animated and immersive, not just another list of ingredients.

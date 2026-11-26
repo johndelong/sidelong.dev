@@ -3,6 +3,7 @@ name: Score Pad
 order: 6
 gradient: '#FFC27A, #FF6FA3'
 glyph: '<path d="M14 15V33M21 15V33M28 15V33M35 15V33M9 30L40 18"/>'
+icon: /apps/score-pad/icon.png
 summary: An iPhone scorekeeper for card and board games, simple enough for anyone at the table to use.
 tagline: Keeps score for card and board games with as few taps as possible, so you can keep your attention on the game.
 chips:

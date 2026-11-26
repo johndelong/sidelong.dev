@@ -3,6 +3,7 @@ name: Compactor Spec
 order: 2
 gradient: '#FFC15E, #E8573A'
 glyph: '<path d="M8 38h32M11 38V21h20v17M31 26h7v12M16 21v-8h10v8M21 25v7M17.5 28.5L21 32l3.5-3.5"/>'
+icon: /apps/compactor-spec/icon.png
 summary: A 3D configurator for industrial trash compactors. Spec the equipment for your building, see how it would be installed, and request a quote from a local installer.
 tagline: Spec an industrial trash compactor for your building, see it installed in 3D, and get a quote.
 chips:
