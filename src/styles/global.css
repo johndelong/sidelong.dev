@@ -792,10 +792,8 @@ dialog.zoom img {
   transform-origin: 0 0; /* it grows from the screenshot's top-left corner, matching the math in zoom.ts */
 }
 
-.zoom-close {
+.zoom-control {
   position: fixed;
-  top: 16px;
-  right: 16px;
   display: grid;
   place-items: center;
   width: 44px;
@@ -811,15 +809,21 @@ dialog.zoom img {
     background 0.2s ease;
 }
 
-dialog.zoom.is-open .zoom-close {
+.zoom-close {
+  top: 16px;
+  right: 16px;
+}
+
+dialog.zoom.is-open .zoom-control,
+dialog.zoom.is-open .zoom-count {
   opacity: 1;
 }
 
-.zoom-close:hover {
+.zoom-control:hover {
   background: rgba(255, 255, 255, 0.16);
 }
 
-.zoom-close svg {
+.zoom-control svg {
   width: 20px;
   height: 20px;
   fill: none;
@@ -828,9 +832,64 @@ dialog.zoom.is-open .zoom-close {
   stroke-linecap: round;
 }
 
+dialog.zoom-gallery {
+  padding: 68px clamp(68px, 7vw, 112px);
+}
+
+.zoom-prev,
+.zoom-next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.zoom-prev {
+  left: 16px;
+}
+
+.zoom-next {
+  right: 16px;
+}
+
+.zoom-count {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  height: 44px;
+  color: #fff;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  dialog.zoom-gallery {
+    padding-inline: 16px;
+  }
+
+  .zoom-prev,
+  .zoom-next {
+    inset: auto auto 16px;
+    transform: none;
+  }
+
+  .zoom-prev {
+    right: calc(50% + 40px);
+  }
+
+  .zoom-next {
+    left: calc(50% + 40px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   dialog.zoom::backdrop,
-  .zoom-close {
+  .zoom-control,
+  .zoom-count {
     transition: none;
   }
 }

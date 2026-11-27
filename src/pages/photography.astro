@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro'
+import gallery from '../photography.json'
+
+const description = 'A few of my favorite portraits and scenery shots.'
+---
+
+<Base title="Photography" description={description}>
+  <section class="wrap introduction">
+    <h1 class="h1 in"><em>Photography</em></h1>
+    <p class="lede in" style="--i: 1">
+      I like taking portraits and playing around with light and framing. Every now and then a view makes
+      me stop and pull out the camera, too. These are a few of my favorites.
+    </p>
+  </section>
+
+  <section class="wrap gallery" aria-label="Photo gallery" data-zoom-gallery>
+    {gallery.map((row, rowIndex) => (
+      <div class="photo-row">
+        {row.map(({ name, alt, width, height }) => (
+          <img
+            src={`/photography/${name}-preview.webp`}
+            data-zoom-src={`/photography/${name}.webp`}
+            alt={alt}
+            width={width}
+            height={height}
+            loading={rowIndex === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            style={`--photo-ratio: ${width / height}`}
+          />
+        ))}
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .introduction {
+    padding-block: clamp(48px, 8vw, 88px) clamp(28px, 5vw, 56px);
+  }
+
+  .introduction .lede {
+    max-width: 57ch;
+    margin-top: 20px;
+  }
+
+  .gallery {
+    --photo-gap: clamp(10px, 1.6vw, 22px);
+    display: grid;
+    gap: var(--photo-gap);
+    padding-bottom: clamp(48px, 8vw, 96px);
+  }
+
+  .photo-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--photo-gap);
+  }
+
+  .photo-row img {
+    display: block;
+    flex: var(--photo-ratio) 1 0;
+    width: 0;
+    min-width: 0;
+    height: auto;
+    border-radius: clamp(6px, 1vw, 14px);
+  }
+
+  @media (max-width: 560px) {
+    .photo-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .photo-row img {
+      flex: none;
+      width: 100%;
+    }
+  }
+</style>

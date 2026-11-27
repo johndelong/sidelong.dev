@@ -1,0 +1,110 @@
+[
+  [
+    {
+      "name": "courtyard",
+      "alt": "Pink bougainvillea over a sunlit white courtyard and a small wooden table.",
+      "width": 1100,
+      "height": 733
+    },
+    {
+      "name": "window-portrait",
+      "alt": "A woman smiles beside a window, leaning forward with her head resting on her hand.",
+      "width": 1100,
+      "height": 733
+    }
+  ],
+  [
+    {
+      "name": "umbrella",
+      "alt": "A child in a red raincoat looks down into a puddle with a clear umbrella reflected in the water.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "fountain-square",
+      "alt": "A stone fountain in a square lined with ornate buildings beneath a blue sky.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "water-arc",
+      "alt": "A swimmer flips their hair, sending an arc of droplets across the setting sun.",
+      "width": 733,
+      "height": 1100
+    }
+  ],
+  [
+    {
+      "name": "harbor",
+      "alt": "A red and white lighthouse overlooks boats in a quiet harbor.",
+      "width": 1100,
+      "height": 733
+    },
+    {
+      "name": "late-sun",
+      "alt": "Two children sit together in tall grass lit by the low sun.",
+      "width": 1100,
+      "height": 733
+    }
+  ],
+  [
+    {
+      "name": "courtyard-cat",
+      "alt": "A cat rests in the sun on a white ledge beside pink flowers.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "autumn-portrait",
+      "alt": "A smiling couple embraces beside water and autumn foliage.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "winter-window",
+      "alt": "A warm window glows beyond a snow-covered railing at night.",
+      "width": 733,
+      "height": 1100
+    }
+  ],
+  [
+    {
+      "name": "coastal-town",
+      "alt": "Colorful hillside buildings look out over a deep blue bay.",
+      "width": 1100,
+      "height": 733
+    },
+    {
+      "name": "winter-portrait",
+      "alt": "A child in a pink pom-pom hat lifts mittened hands in the snow.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "cookbook",
+      "alt": "A baby in a pink dress reaches for an open cookbook while holding a cracker.",
+      "width": 1100,
+      "height": 735
+    }
+  ],
+  [
+    {
+      "name": "woodland-creek",
+      "alt": "A mossy fallen tree crosses a rocky creek in a green forest.",
+      "width": 733,
+      "height": 1100
+    },
+    {
+      "name": "blossoms",
+      "alt": "Pink blossoms on branches against a soft green background.",
+      "width": 1100,
+      "height": 733
+    },
+    {
+      "name": "newborn",
+      "alt": "A woman holds a newborn wearing a pink flower headband close to her face.",
+      "width": 733,
+      "height": 1100
+    }
+  ]
+]
