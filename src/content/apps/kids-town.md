@@ -4,6 +4,9 @@ order: 7
 gradient: '#FFD166, #FF8E53'
 glyph: '<path d="M7 38V25l8-8 8 8v13zM27 38V20l7-7 7 7v18z"/>'
 icon: /apps/kids-town/icon.png
+screenshot: /apps/kids-town/town.webp
+screenshotAlt: "The Kids Town home screen with tiles for the Library, Bank, Pet Shop, and Grocery Store."
+screenshotAspectRatio: 2.5
 summary: Pretend-play apps for kids, starting with a library and a bank, that work the way the real ones do.
 tagline: A small town of pretend-play apps where kids run a real library and a real bank, without real consequences.
 chips:
@@ -19,8 +22,16 @@ goals:
 features:
   - title: The library
     body: Add people and books, scan barcodes with the camera or type them in, check books out with due dates, and see what's overdue.
+    screenshot: /apps/kids-town/library.webp
+    alt: "The Kids Town Library dashboard showing active members, current checkouts, and an overdue book."
   - title: The bank
-    body: Personal accounts with deposits, withdrawals, payees and memos, a transaction history, low-balance alerts, and printable debit cards with QR codes.
+    body: Personal accounts with deposits, withdrawals, payees and memos, a transaction history, and low-balance alerts.
+    screenshot: /apps/kids-town/bank.webp
+    alt: "A sample Kids Town Bank account showing a pretend money balance, deposits, and debit card purchases."
+  - title: A debit card to print
+    body: Kids can print a pretend debit card with a QR code and bring it to the register when they play shop.
+    screenshot: /apps/kids-town/debit-card.webp
+    alt: "The front and back of a printable Kids Town debit card for a fictional account, with a QR code on the back."
 ---
 
 My girls had a cash register, a pile of books, and a library card with my name on it. They’d set up a library and wanted me to check out a book. I remember thinking, let’s make this a little more real. What if they could scan the books themselves?
