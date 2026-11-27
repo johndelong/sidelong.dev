@@ -9,7 +9,7 @@ import Stage from '../../components/Stage.astro'
 const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
 const featured = apps.find((app) => app.data.featured) ?? apps[0]
 const others = apps.filter((app) => app !== featured)
-const description = 'In my spare hours I build small, careful apps for the people around me. This is where they live.'
+const description = 'I like building apps for the people around me. Here are a few I’ve made.'
 ---
 
 <Base title="Software" description={description}>
