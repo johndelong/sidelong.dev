@@ -113,9 +113,10 @@ export async function shrinkInto(slab: HTMLElement) {
 document.addEventListener('astro:before-preparation', (e) => {
   const to = pathOf(e.to)
   const from = pathOf(e.from)
-  if (to !== '/' || from === '/' || calm.matches) return
+  if (to !== '/' || from === '/') return
   const i = placeFor(from)
-  if (i >= 0) sessionStorage.setItem('sidelong-door', String(i))
+  if (i >= 0) sessionStorage.setItem('sidelong-door-label', site.places[i].label)
+  if (calm.matches) return
   const colors = i >= 0 ? site.places[i].colors : ''
   const panel = make(colors ? `linear-gradient(135deg, ${colors})` : 'var(--ground)')
   Object.assign(panel.style, frame(screen()))

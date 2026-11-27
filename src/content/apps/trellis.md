@@ -2,14 +2,14 @@
 name: Trellis
 order: 1
 featured: true
-summary: A private, local-first desktop app for engineering managers. Trellis helps every person on your team see where they can grow, and helps you get them there.
-tagline: Helps every person on your team see where they can grow, and helps you get them there.
+summary: A private, local-first desktop app for managers who want to help their direct reports grow in their careers.
+tagline: Help your direct reports see how they can grow in their careers, and give them the support to get there.
 gradient: '#FF8A5B, #E8508A 55%, #7B4AE2'
 icon: /apps/trellis/icon.png
 screenshot: /apps/trellis/assessments.webp
 screenshotAlt: "Trellis showing a sample team member's readiness for the next level: an 88% readiness score with a trend chart, and a role-fit scan scoring each attribute against her current level."
 chips:
-  - For engineering managers
+  - For managers
   - Desktop
   - Local-first
   - Encrypted vault

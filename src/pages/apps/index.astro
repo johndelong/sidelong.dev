@@ -5,23 +5,22 @@ import AppIcon from '../../components/AppIcon.astro'
 import Arrow from '../../components/Arrow.astro'
 import Shot from '../../components/Shot.astro'
 import Stage from '../../components/Stage.astro'
-import { site } from '../../site'
 
 const apps = (await getCollection('apps')).sort((a, b) => a.data.order - b.data.order)
 const featured = apps.find((app) => app.data.featured) ?? apps[0]
 const others = apps.filter((app) => app !== featured)
+const description = 'In my spare hours I build small, careful apps for the people around me. This is where they live.'
 ---
 
-<Base title="Software">
+<Base title="Software" description={description}>
   <section class="wrap" style="padding-top: 104px; padding-bottom: 96px">
     <div class="cols">
       <div class="s8 stack" style="--gap: 24px">
         <p class="eyebrow in" style="--i: 1">Software</p>
         <h1 class="h1 in" style="--i: 2">Software made on the side, seen from an <em>angle.</em></h1>
-        <p class="lede in" style="--i: 3">I'm {site.author}. {site.intro}</p>
+        <p class="lede in" style="--i: 3">{description}</p>
         <div class="actions in" style="--i: 5">
           <a class="button" href="#apps">See all {apps.length}</a>
-          <a class="link" href="/about">About me</a>
         </div>
       </div>
     </div>

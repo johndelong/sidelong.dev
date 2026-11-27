@@ -274,15 +274,139 @@ a:hover {
   color: var(--muted);
 }
 
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  .header .nav,
+  .desktop-crumb {
+    display: none;
+  }
+
+  .header .trail,
+  .header .crumb {
+    gap: 8px;
+  }
+
+  .header .brand {
+    flex-shrink: 0;
+    gap: 6px;
+    font-size: 20px;
+  }
+
+  .header .brand svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header .crumb {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-nav {
+    position: relative;
+    z-index: 2;
+    display: block;
+    min-width: 0;
+  }
+
+  .mobile-nav summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding-inline-end: 6px;
+    border-radius: 8px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-nav summary svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mobile-nav[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  .mobile-nav nav {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 160px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+
+  .mobile-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 12px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a:focus-visible,
+  .mobile-nav a[aria-current] {
+    background: var(--ground);
+    color: var(--ink);
+  }
+}
+
 .footer {
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.footer .footer-inner {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 28px 0 40px;
-  border-top: 1px solid var(--line);
-  font-size: 14px;
-  color: var(--muted);
+  gap: 0 24px;
+  padding-block: 16px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  text-underline-offset: 0.25em;
+}
+
+.footer-links a:hover {
+  color: var(--ink);
 }
 
 /* Links and buttons */

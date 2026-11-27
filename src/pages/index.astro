@@ -94,6 +94,7 @@ const places = site.places
 
 <script>
   import { navigate } from 'astro:transitions/client'
+  import { site } from '../site'
   import { covering, grow, reveal, shrinkInto } from '../scripts/veil'
 
   const calm = matchMedia('(prefers-reduced-motion: reduce)')
@@ -211,7 +212,7 @@ const places = site.places
     }
     if (inside && front !== kept) {
       kept = front
-      sessionStorage.setItem('sidelong-door', String(front))
+      sessionStorage.setItem('sidelong-door-label', site.places[front].label)
     }
   }
   const request = () => {
@@ -282,7 +283,8 @@ const places = site.places
     firstVisit = false
     const room = fromLoad ? reloaded && wasAt === 'room' : !!sessionStorage.getItem('sidelong-entered')
     // In the room, the door you last had at the front is there again
-    front = room ? wrap(Number(sessionStorage.getItem('sidelong-door')) || 0, count) : 0
+    const savedDoor = sessionStorage.getItem('sidelong-door-label')
+    front = room ? Math.max(0, site.places.findIndex((place) => place.label === savedDoor)) : 0
     document.getElementById('scroller')?.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', request, { passive: true })
     scene.addEventListener('scroll', settled, { passive: true })
