@@ -15,6 +15,6 @@ export const site = {
   contact: [
     { label: '[your email]', href: '#' },
     { label: 'GitHub', href: 'https://github.com/johndelong' },
-    { label: '[LinkedIn]', href: '#' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/johnnydelong/' },
   ],
 }

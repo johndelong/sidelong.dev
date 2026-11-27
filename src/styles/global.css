@@ -438,15 +438,10 @@ a.card:hover {
   padding: 32px;
 }
 
-/* The stage: a leaning gradient plane with an upright frame in front */
+/* The 88%-wide image fills 84% of the stage height at its natural ratio. */
 .stage {
   position: relative;
-  --stage-height: 480px;
-  height: var(--stage-height);
-}
-
-.stage.tall {
-  --stage-height: 640px;
+  aspect-ratio: calc(var(--media-ratio) * 0.84 / 0.88);
 }
 
 .stage-plane {
@@ -456,7 +451,7 @@ a.card:hover {
 
 .stage-front {
   position: absolute;
-  inset: 12% 18% 12% 0;
+  inset: 8% 12% 8% 0;
 }
 
 .stage-plane > div,
@@ -519,31 +514,43 @@ a.card:hover {
   box-shadow: -18px 28px 60px var(--shadow);
 }
 
-/* Size the frame from the available height and width before laying out its image. */
 .stage-front .shot {
-  width: min(100%, calc(var(--stage-height) * 0.76 * 16 / 9));
+  width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--media-ratio);
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
 }
 
-.stage.phone {
+/* Keep tall media within the stage height while leaving room for the backdrop. */
+.stage.portrait {
   --stage-height: 760px;
+  height: var(--stage-height);
+  aspect-ratio: auto;
 }
 
-.stage.phone .stage-front {
-  inset: 3% 6% 3% 14%; /* centred over the plane */
+.stage.portrait .stage-front {
+  inset: 3% 6% 3% 14%;
 }
 
-.stage.phone .stage-front .shot {
-  margin: 0 auto;
-  width: min(100%, calc(var(--stage-height) * 0.94 * 960 / 1976));
-  aspect-ratio: 960 / 1976;
+.stage.portrait .shot {
+  margin-inline: auto;
+  width: min(100%, calc(var(--stage-height) * 0.94 * var(--media-ratio)));
 }
-
 
 .feature-frame {
   aspect-ratio: 16 / 9;
+}
+
+/* Framed phones and cutout photos keep their proportions and leave room to enlarge. */
+.feature-frame:has(img:is([src*='-phone'], [src*='-cutout'])) {
+  aspect-ratio: auto;
+}
+
+.feature-frame img:is([src*='-phone'], [src*='-cutout']) {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(320px, 44svh);
 }
 
 .features {
@@ -691,12 +698,7 @@ a.card:hover {
     padding-bottom: 80px;
   }
 
-  .stage,
-  .stage.tall {
-    --stage-height: 300px;
-  }
-
-  .stage.phone {
+  .stage.portrait {
     --stage-height: 480px;
   }
 

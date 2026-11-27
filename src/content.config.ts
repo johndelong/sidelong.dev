@@ -17,6 +17,7 @@ const apps = defineCollection({
     chips: z.array(z.string()).default([]),
     link: z.object({ label: z.string(), href: z.string() }).optional(),
     screenshot: z.string().optional(), // hero screenshot path in /public
+    screenshotAspectRatio: z.number().positive().optional(),
     screenshotAlt: z.string().default(''),
     // The app's own colours for its page: any design token from global.css, e.g. ground, ink, accent
     theme: z.record(z.string()).default({}),

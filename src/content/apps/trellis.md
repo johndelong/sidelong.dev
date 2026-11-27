@@ -32,9 +32,9 @@ theme:
 goalsTitle: Three goals drive everything in it
 goals:
   - title: Make the case.
-    body: Build the evidence, from assessments, feedback and compensation context, so the growth people have shown gets recognized and championed at calibration.
+    body: Keep examples of someone’s work and feedback close at hand, so you can speak up for them when promotions come up.
   - title: Light the path.
-    body: "Give each person an honest, concrete picture of how to grow: what they're already meeting, what the next level asks for, and what's currently holding them back."
+    body: "Give each person something concrete to work toward, with examples of what they already do well and room to talk through what comes next."
   - title: Remember what matters.
     body: Keep every 1:1 in one running, searchable record, so the things people tell you, and the things you promised to do, don't slip.
 features:
@@ -60,16 +60,12 @@ features:
     alt: "Selecting two people in Trellis to split off into a new vault for their team lead."
 ---
 
-I've been working on the same problem for about four years. Back in 2022, leading the development practice at a previous company, I wrote down that the thing I most wanted to pursue was mapping out career paths for our developers. The question I kept fumbling was the one that matters most to the people I lead: how do I grow from here? Without something concrete behind them, my answers felt subjective. People left our conversations unsure what else they could be doing, and when someone was pushing for a promotion, that uncertainty turned into frustration.
+“How do I grow from here?” I’ve been asked that a lot as a manager, and I haven’t always had a good answer. I could talk about the next level in broad strokes. It was harder to say what that would look like in the work someone was doing that week. By 2022, when I was leading a development practice, I’d written down career paths as something I wanted to spend more time on.
 
-What fixed it was a career matrix: every level on every track, with what's expected at each. It isn't a checklist you tick off on the way to a promotion. It's a shared picture of expectations, so we can both see whether someone is living up to the next level, and so I can make the case when they are.
+Having expectations written down by level gave us something to look at together. We could talk about a particular piece of work, what went well, and what they might try next. Sometimes that gave me an opening to find a project where they could practice something new. Sometimes it helped me see that they were already doing work I ought to be speaking up for.
 
-There's a line I've kept close for years: grace without truth is acceptance, and truth without grace is harshness. The matrix lets me be honest with someone about what's holding them back, and kind about how we get there. Because everyone has different strengths, it also gives us something real to work on in our 1:1s. My job is to give people opportunities to grow. Theirs is to seize them. That's where the name comes from: a trellis is the structure that helps something grow and climb.
+I’d used Lattice before, and I liked having a shared career ladder. I still had trouble going from the ladder to a concrete conversation or finding the note I wanted from a few months back. When I changed jobs and started putting my own system together, I realized I could build something that linked those pieces. That became Trellis. I liked the name because it’s a structure that gives something room and support to grow.
 
-I'd used Lattice at a previous company, and its matrix was decent. But I couldn't assess someone against it to pull out where they needed to grow, and finding an old 1:1 note was a pain. Changing jobs also taught me that tools like that don't come with you. The next company I joined didn't use Lattice, and every manager had their own system. So I kept the parts I liked and built the tool I wanted.
+I come back to the 1:1 notes a lot. I want to remember what someone told me about their kid’s big game, or that I said I’d check in after a hard week. It’s easy to mean well in the moment and then get busy. Having a place to find those notes helps me follow through. They’re private conversations, and the same app holds feedback and pay information, so I built it around an encrypted vault on my machine. A couple of team leads have tried it with vaults for the people they manage.
 
-The data inside is about as sensitive as data gets: assessments, feedback, pay. I didn't want to be responsible for a leak, so Trellis keeps everything in an encrypted vault on my own machine, synced through my cloud storage so it's backed up if my laptop is ever lost. A couple of my team leads have tried it too, each with a vault holding only the people they manage, while I can still see everyone.
-
-The other half of the job is remembering. I want to be someone my team can depend on, who doesn't forget what they've told me and follows up on what matters. The details are small: a partner's name, a kid's big game, a doctor's appointment someone was worried about. But when someone brings one up again and I already know the backstory, the whole conversation changes. Those moments are why I take notes the way I do.
-
-I'm now starting to use Trellis's promotion reports to advocate for people on my team. I'll update this page with how it goes.
+I’m proud of how Trellis has come together. I built it because I wanted to get better at a job I care about, and it’s become something I use in that job. I’m starting to bring the promotion reports into those conversations, too. It feels good to have specific examples in front of me when it’s time to speak up for someone.

@@ -3,6 +3,7 @@ name: Kids Town
 order: 7
 gradient: '#FFD166, #FF8E53'
 glyph: '<path d="M7 38V25l8-8 8 8v13zM27 38V20l7-7 7 7v18z"/>'
+icon: /apps/kids-town/icon.png
 summary: Pretend-play apps for kids, starting with a library and a bank, that work the way the real ones do.
 tagline: A small town of pretend-play apps where kids run a real library and a real bank, without real consequences.
 chips:
@@ -22,12 +23,10 @@ features:
     body: Personal accounts with deposits, withdrawals, payees and memos, a transaction history, low-balance alerts, and printable debit cards with QR codes.
 ---
 
-Kids Town started with my girls' library. They'd set one up on their own: a cash register at the front desk, a pile of books, and a library card made out to me. They wanted me to check out a book. That was the moment I thought, let's make this more real.
+My girls had a cash register, a pile of books, and a library card with my name on it. They’d set up a library and wanted me to check out a book. I remember thinking, let’s make this a little more real. What if they could scan the books themselves?
 
-It grew from there into a whole town built around buying, selling and managing money. My wife played something similar as a kid, which she called "Money Town." It seemed like a fun way to teach kids about money and debit cards while leaning into their creativity and imaginary play. The money is all pretend, and you decide how much everyone starts with.
+My wife played a game she called Money Town when she was a kid. That gave me an idea for what could go next to the library: a bank with pretend money and debit cards. One kid can run the library while another runs the grocery register, or they can switch jobs whenever they feel like it. I liked that they could play their own game and get some practice with how money works along the way.
 
-The kids take turns playing different roles, or each sticks with one role at a different shop, like one running the library while the other works the grocery register.
+I love adding options when I build things. My girls had already opened a library by the time I would’ve finished the settings screen. The girls just wanted to play, and every extra choice was another thing to get through before they could get back to it. That’s where the big buttons and short menus came from. Twenty minutes of setup is a long time when someone is already waiting to check out a book.
 
-Building it taught me something about my own habits. As an engineer, I love building in options. For kids, options kill the vibe: they get lost in a sea of them, and they just want to play. So everything has big buttons and very few actions, and the goal is to get them playing quickly, not to spend twenty minutes on setup.
-
-It's been a while since they've picked it up. To bring the excitement back, I'm thinking about 3D printing credit cards with NFC chips inside, so they have something real to hold and tap.
+It’s been a while since they’ve played. I still think it would be fun to 3D-print pretend debit cards with NFC chips so they have something they can actually hold and tap.

@@ -1,11 +1,17 @@
 ---
 // The leaning gradient plane with an upright frame in front of it. A phone app's hero is one
 // tall phone, so its stage is taller and the phone stands nearly the full height of the plane.
-const { tall = false, phone = false, href } = Astro.props
+interface Props {
+  aspectRatio?: number
+  href?: string
+}
+
+const { aspectRatio = 16 / 9, href } = Astro.props
+const portrait = aspectRatio < 1
 const Frame = href ? 'a' : 'div'
 ---
 
-<div class:list={['stage', { tall, phone }]}>
+<div class:list={['stage', { portrait }]} style={`--media-ratio: ${aspectRatio}`}>
   <div class="stage-plane par-slow" aria-hidden="true">
     <div class="lean"><div class="plane"></div></div>
   </div>

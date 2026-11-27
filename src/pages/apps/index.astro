@@ -37,7 +37,7 @@ const others = apps.filter((app) => app !== featured)
         <a class="link" href={`/apps/${featured.id}`}>The story behind {featured.data.name} <Arrow /></a>
       </div>
       <div class="s7">
-        <Stage href={`/apps/${featured.id}`}>
+        <Stage aspectRatio={featured.data.screenshotAspectRatio} href={`/apps/${featured.id}`}>
           <Shot
             src={featured.data.screenshot}
             alt={featured.data.screenshotAlt}

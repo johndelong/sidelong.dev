@@ -1,76 +1,132 @@
 ---
 import Base from '../layouts/Base.astro'
 import Arrow from '../components/Arrow.astro'
-import Shot from '../components/Shot.astro'
 import Stage from '../components/Stage.astro'
 import { site } from '../site'
 
-// Replace with a path in /public, e.g. '/portrait.jpg'
-const portrait = undefined
-
-const principles = [
-  { title: '[Principle one]', body: '[A sentence on what it means in practice.]', color: 'var(--accent-3)' },
-  { title: '[Principle two]', body: '[A sentence on what it means in practice.]', color: 'var(--accent)' },
-  { title: '[Principle three]', body: '[A sentence on what it means in practice.]', color: 'var(--accent-2)' },
-]
+const description = 'John DeLong on faith, family, engineering leadership, and the things he builds on the side.'
 ---
 
-<Base title="About">
-  <section class="wrap" style="padding-top: 88px; padding-bottom: 136px">
+<Base title="About" description={description}>
+  <section class="wrap section" style="padding-top: 88px">
     <div class="cols center">
       <div class="s7 stack" style="--gap: 24px">
-        <p class="eyebrow in" style="--i: 1">About</p>
-        <h1 class="h1 in" style="--i: 2">Hi, I'm <em>{site.author}.</em></h1>
-        <p class="lede in" style="--i: 3; font-size: 21px; color: var(--ink-2)">
-          [One or two sentences: who you are and what you do, in the voice you'd use with a friend.]
-        </p>
-        <p class="lede in" style="--i: 4; font-size: 19px">
-          [Why you build on the side: what you get out of it, and who the apps are for.]
+        <h1 class="h1 in">Hi, I'm <em>{site.author}.</em></h1>
+        <p class="lede in" style="--i: 1; font-size: 21px">
+          I'm a Christian, a husband, and a dad to three girls. I lead a software team for work,
+          and in my spare time I'm usually building something.
         </p>
       </div>
-      <div class="s5">
-        <Stage><Shot src={portrait} alt={`Portrait of ${site.author}`} label="Portrait" /></Stage>
+      <div class="s5 portrait-stage">
+        <Stage aspectRatio={3 / 2}>
+          <img src="/john-delong.webp" alt={`Portrait of ${site.author}`} width="1200" height="800" />
+        </Stage>
       </div>
     </div>
   </section>
 
   <section class="wrap section">
     <div class="cols">
-      <h2 class="h2 s4 rvl">Why “sidelong”</h2>
+      <h2 class="h2 s4 rvl">Faith and family</h2>
       <div class="prose s7 end rv">
         <p>
-          Sidelong means from the side. Everything here is a side project, and I like coming at a problem from a
-          slightly different angle than the obvious one.
+          My Christian faith is the foundation I build my life around. I believe the Bible is God's Word,
+          and I want it to shape how I love my family, how I lead, and how I treat the people around me.
         </p>
-        <p style="color: var(--muted)">[Anything personal about the name you'd like to add.]</p>
+        <p>
+          I want to make time for God and help our girls grow in their own faith. I also want them to know
+          they can come to me about anything. I hope to be someone they still want to talk to and ask for
+          advice when they're grown.
+        </p>
       </div>
     </div>
   </section>
 
   <section class="wrap section">
-    <h2 class="h2 rvl" style="margin-bottom: 32px">How I build</h2>
     <div class="cols">
-      {
-        principles.map((principle, i) => (
-          <div class:list={['card panel s4', i ? 'rv' : 'rvl']} style="padding: 28px">
-            <h3 class="h3" style={`font-style: italic; font-size: 24px; color: ${principle.color}`}>{principle.title}</h3>
-            <p class="body" style="font-size: 17px">{principle.body}</p>
-          </div>
-        ))
-      }
+      <h2 class="h2 s4 rvl">Work</h2>
+      <div class="prose s7 end rv">
+        <p>
+          I grew up in Cedar Springs, Michigan, and studied computer engineering at Grand Valley State
+          University. I started at Dematic, working on software for logistics sites, then spent eleven
+          years at Michigan Software Labs. I went from developer to tech lead to leading the development practice.
+        </p>
+        <h3>LandstarOne</h3>
+        <p>
+          I spent about seven years building and evolving Landstar's iOS and Android app. On iOS,
+          I led the move from UIKit to SwiftUI, using the migration to improve accessibility and support
+          larger text across the app.
+        </p>
+        <h3>Altus Virtual Care</h3>
+        <p>
+          I spent about a year building a web app that connects hospital patients with doctors and family.
+          The system ran on AWS and included video calls, remote camera controls, and an Epic integration.
+          I helped get it to launch before handing it over to the Altus team.
+        </p>
+        <h3>National Heritage Academies</h3>
+        <p>
+          I now lead the school applications engineering team at National Heritage Academies. We build
+          software that schools use to manage student information. I like staying close to the technical
+          work, and I try to lead by listening first, clearing roadblocks, and giving people room to do good work.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="cols">
+      <h2 class="h2 s4 rvl">On the side</h2>
+      <div class="prose s7 end rv">
+        <p>
+          A lot of my side projects start with someone I know. <a href="/apps/trellis/">Trellis</a> grew out
+          of wanting clearer career paths for the people I lead. <a href="/apps/oriel/">Oriel</a> gave our kids
+          a way to see the family calendar for themselves. <a href="/apps/kids-town/">Kids Town</a> started
+          when my girls set up a library and handed me a card to check out a book.
+        </p>
+        <p>
+          Away from the keyboard, I like photography, making videos, and building things around the house.
+          I've wired entire homes, installed a kitchen, insulated a house, remodeled bathrooms and a basement,
+          and built a deck and floating shelves, to name a few projects. I also design and 3D-print things,
+          including RC planes I get to fly, and I like trying to get better at latte art.
+        </p>
+        <p>
+          Sidelong means from the side. It fits the things I make on the side and the fun of coming at a
+          problem from a slightly different angle.
+        </p>
+        <a class="link" href="/apps/">See the apps <Arrow /></a>
+      </div>
     </div>
   </section>
 
   <section class="wrap" style="padding-bottom: 96px">
     <div class="cols">
-      <div class="s7 stack rvl" style="--gap: 16px">
-        <h2 class="h2">Say hello</h2>
-        <p class="body" style="font-size: 19px">[A line inviting people to get in touch.]</p>
-        <div class="actions" style="gap: 8px 32px">
-          {site.contact.map((item) => <a class="link" href={item.href}>{item.label}</a>)}
-        </div>
-        <a class="link" href="/apps">See the apps <Arrow /></a>
+      <h2 class="h2 s4 rvl">Find me</h2>
+      <div class="s7 end rv profile-links">
+        {site.contact.filter((item) => item.href !== '#').map((item) => (
+          <a class="link" href={item.href}>{item.label}</a>
+        ))}
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .portrait-stage img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+  }
+
+  .profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 28px;
+  }
+
+  .profile-links a {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+</style>

@@ -27,12 +27,10 @@ features:
     body: Charts show how far each player is from first place as the game goes on.
 ---
 
-Score Pad came out of game nights. Five Crowns comes out a lot, along with Wizard, Spades, Hearts and Skyjo, all games with plenty of scoring to keep track of.
+“Hold on. Wait a sec. Not all at once.” That was me at the end of a hand, trying to find the right person in a scorekeeping app while everyone called out their numbers. Somehow I’d turned keeping score into the longest part of the game. I wanted to get the numbers in and deal the next hand. So in Score Pad, the players are in the order they’re sitting around the table. If somebody calls out early, I can put their score in right then.
 
-I'd tried scorekeeping apps before, and they all made me the bottleneck. A hand would end and I'd be saying "hold on," "wait a sec," "not all at once" while I hunted for the right button and the right player. Score Pad lets you enter scores in any order, but by default it goes around the table in the order everyone is actually sitting, so most of the time you just read them off as people call them out.
+My wife’s grandpa plays with us, and I wanted him to be able to pick up the phone and keep score without me walking him through it. Pencil and paper felt like the right bar. We play Five Crowns, Wizard, Spades, Hearts and Skyjo, so I still wanted enough flexibility to use it for whichever game came out that night.
 
-My wife's grandpa plays with us, and he isn't especially comfortable with technology. I wanted him to be able to pick it up and know what to do without being shown. Keeping score should feel as simple as pencil and paper. So the goal was to strip out the complexity but keep the flexibility, so it works for whatever game we're playing.
+My favorite part of looking back at the scores is seeing what happened along the way. Who came back from way behind? How close did you get to catching the person across the table? There’s usually something to laugh about even if you came in last. I’d love to make those little stories easier to spot.
 
-When someone asks what the score is, they usually want to know who's in first and how far behind they are, so that's what the charts show. But when you're not winning, you care about other things too: a comeback, a streak, how you're doing against one particular player. People look through the numbers trying to work out what story they tell, and there's almost always something to be proud of, or to laugh at. That's where I want to take it next, calling out things like win streaks and the biggest comeback.
-
-It never made it to the App Store. It was in TestFlight, and that build has almost certainly expired by now. It still saves me time every time we play, so it's due for a cleanup and a proper release.
+I still use Score Pad when we play. It made it as far as TestFlight, and I’d like to clean it up and put it out there someday.
