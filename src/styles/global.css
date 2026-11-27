@@ -729,21 +729,24 @@ img.zoomable:focus-visible {
   }
 }
 
-/* Phone images ("-phone" or "-phones" in the file name) are devices on a transparent background,
-   so a ring would outline empty space. They lift a little instead. */
-img.zoomable[src*='-phone'] {
+/* Phone images ("-phone" or "-phones" in the file name) and cut-out photos ("-cutout") sit on a
+   transparent background, so a ring would outline empty space. They lift a little instead. */
+img.zoomable[src*='-phone'],
+img.zoomable[src*='-cutout'] {
   outline: none;
   transition: transform 0.35s var(--ease);
 }
 
 @media (hover: hover) {
-  img.zoomable[src*='-phone']:hover {
+  img.zoomable[src*='-phone']:hover,
+  img.zoomable[src*='-cutout']:hover {
     transform: translateY(-8px);
   }
 }
 
 /* The lift alone is too easy to miss for keyboard focus, so focus keeps the ring too */
-img.zoomable[src*='-phone']:focus-visible {
+img.zoomable[src*='-phone']:focus-visible,
+img.zoomable[src*='-cutout']:focus-visible {
   transform: translateY(-8px);
   outline: 2px solid var(--accent);
 }

@@ -22,15 +22,25 @@ goals:
     body: The kids don't have to ask what's happening this week. Every event shows who it's for, and it's the last thing we check on the way out the door.
   - title: Helping is fun.
     body: Everyday chores are part of being in the family. Extra jobs earn points, streaks and a little celebration, and points turn into gifts, activities and experiences.
+screenshot: /apps/oriel/chores.webp
+screenshotAlt: "Oriel's chore boards for three sample kids: morning, afternoon and evening chores with checkmarks, points toward a reward, and streak counts."
 features:
   - title: One calendar, colour-coded by person
     body: Our shared Google Calendar, with each person in their own colour. Events can be added right from the wall, and the calendar keeps working when the internet doesn't.
+    screenshot: /apps/oriel/month.webp
+    alt: "Oriel's month view for a sample family, events colour-coded by person with a key along the bottom, including a sleepover at Grandma's and a birthday."
   - title: Chore boards, points and streaks
     body: Daily boards reset on their own. Kids can claim extra jobs, work ahead, keep a streak alive for bonus points, and spend what they earn on rewards their parents set up. Finishing something comes with an animation worth finishing for.
+    screenshot: /apps/oriel/extras.webp
+    alt: "Oriel's list of extra jobs for one kid, from reading for 30 minutes to cleaning out the car, each with the points it earns."
   - title: The house, on the lock screen
     body: Oriel connects to Home Assistant. Urgent things, like an open door or an unlocked lock, show on the lock screen, and the Home tab controls everything else.
+    screenshot: /apps/oriel/home.webp
+    alt: "Oriel's Home tab: doors and locks, two overhead garage doors, and thermostats for each floor with heating controls."
   - title: A picture frame when it's idle
     body: When nobody's using it, Oriel shows family photos with the state of the house laid quietly over the top.
+    screenshot: /apps/oriel/wall-cutout.webp
+    alt: "Oriel hanging on a hallway wall in a wooden picture frame, showing a photo of a child in a red raincoat splashing in a puddle, with the time and next event over it."
 ---
 
 My wife and I have shared a Google calendar since we were dating. That worked for two people. As our girls have grown up, though, it's gotten harder to keep track of everyone's schedule, and even harder to tell them about it, since they had no way to check the calendar themselves. Chores were the same story: a handful of things we expected every day, and a lot of reminding that didn't always stick.
