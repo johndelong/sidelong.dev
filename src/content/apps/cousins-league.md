@@ -10,13 +10,25 @@ chips:
   - For the family
   - Web app
   - Fantasy football
+screenshot: /apps/cousins-league/standings.webp
+screenshotAlt: "Cousins League standings showing each player’s four NFL teams and fantasy point total."
 features:
   - title: Live scores and standings
     body: Follow NFL scores quarter by quarter and see how each result changes the family standings.
+    screenshot: /apps/cousins-league/race.webp
+    alt: "A line chart tracking each player’s fantasy points across the season."
+  - title: See how the points add up
+    body: Check each of your four NFL teams and their next matchup, then switch to Week by Week to see the game scores, bonuses and running season total in one table.
+    screenshot: /apps/cousins-league/player.webp
+    alt: "The Week by Week player tab, with one column per NFL team and a breakdown of game scores, bonus points, weekly totals and running season totals."
   - title: Something to celebrate every week
     body: Player of the Week crowns, hot streaks, league records and an honor roll give everyone something to look forward to.
+    screenshot: /apps/cousins-league/awards.webp
+    alt: "The Honor Roll with cards for Player of the Week, hot streaks, perfect weeks and other awards."
   - title: Season outlook
     body: Simulate the remaining schedule to see how the season might shake out.
+    screenshot: /apps/cousins-league/outlook.webp
+    alt: "Projected points and chances of winning for each player in the family league."
 ---
 
 Grandma wanted to get the grandkids into fantasy football. We drew names from a hat for the draft order and took turns over FaceTime picking four NFL teams each. Five kids play, and Grandma and Grandpa are in it too.
