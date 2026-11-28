@@ -4,6 +4,9 @@ order: 6
 gradient: '#FFC27A, #FF6FA3'
 glyph: '<path d="M14 15V33M21 15V33M28 15V33M35 15V33M9 30L40 18"/>'
 icon: /apps/score-pad/icon.png
+screenshot: /apps/score-pad/scores-phone.webp
+screenshotAspectRatio: 0.48582995951417
+screenshotAlt: "An iPhone showing the Five Crowns scoreboard in Score Pad, with round information, player rankings, and running scores."
 summary: An iPhone scorekeeper for card and board games, simple enough for anyone at the table to use.
 tagline: Keeps score for card and board games with as few taps as possible, so you can keep your attention on the game.
 chips:
@@ -21,10 +24,20 @@ goals:
 features:
   - title: Set up any game
     body: Choose the players, whether there's a dealer, whether high or low score wins, and whether the game ends after a set number of rounds, at a target score, or never.
+    screenshot: /apps/score-pad/new-game-phone.webp
+    alt: "Score Pad’s start screen with Active and History tabs and a New Game button."
   - title: Fast score entry
     body: Scores go in around the table in the order everyone is sitting, but you can enter them in any order, and any round can be edited later.
+    screenshot: /apps/score-pad/entry-phone.webp
+    alt: "Score Pad’s number pad with arithmetic controls and arrows for moving between players."
   - title: See the race
-    body: Charts show how far each player is from first place as the game goes on.
+    body: Charts show how far each player is from first place, and accolades call out comebacks and standout rounds.
+    screenshot: /apps/score-pad/insights-phone.webp
+    alt: "A round-by-round score chart followed by accolades including Comeback Kid, Sharpshooter, and Team Spirit."
+  - title: The final standings
+    body: When the game ends, Score Pad gives the winner their moment and shows where everyone finished.
+    screenshot: /apps/score-pad/winner-phone.webp
+    alt: "The Score Pad winner screen with a gold crown and the final scores for all four players."
 ---
 
 “Hold on. Wait a sec. Not all at once.” That was me at the end of a hand, trying to find the right person in a scorekeeping app while everyone called out their numbers. Somehow I’d turned keeping score into the longest part of the game. I wanted to get the numbers in and deal the next hand. So in Score Pad, the players are in the order they’re sitting around the table. If somebody calls out early, I can put their score in right then.
